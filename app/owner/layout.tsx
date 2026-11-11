@@ -1,9 +1,15 @@
 
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, {
+  Suspense,
+  useEffect,
+  useState,
+} from 'react';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
 import {
   Home,
   Package,
@@ -17,31 +23,72 @@ import {
   LogOut,
 } from 'lucide-react';
 
+// ==========================================
+// TYPE PROFILE
+// ==========================================
+
 type Profile = {
   nama: string;
   role: string;
   avatar_url?: string | null;
 };
 
+// ==========================================
+// HELPER FUNCTIONS
+// ==========================================
+
 function getInitials(nama: string) {
-  return nama
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word[0])
-    .join('')
-    .toUpperCase() || 'U';
+  return (
+    nama
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((word) => word[0])
+      .join('')
+      .toUpperCase() || 'U'
+  );
 }
 
 function formatRole(role: string) {
   return role
     .split(/\s+/)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(
+      (word) =>
+        word.charAt(0).toUpperCase() + word.slice(1)
+    )
     .join(' ');
 }
 
-export default function OwnerLayout({
+// ==========================================
+// MENU OWNER
+// ==========================================
+
+const menuItems = [
+  { name: 'Home Page', href: '/owner', icon: Home },
+  { name: 'Data Produk', href: '/owner/produk', icon: Package },
+  { name: 'Data Bahan Baku', href: '/owner/bahan-baku', icon: Boxes },
+  { name: 'Resep', href: '/owner/resep', icon: BookOpen },
+  { name: 'Data Supplier', href: '/owner/supplier', icon: Truck },
+  {
+    name: 'Pemesanan Bahan Baku',
+    href: '/owner/pemesanan-bahan-baku',
+    icon: ShoppingBag,
+  },
+  { name: 'Pesanan', href: '/owner/pesanan', icon: ClipboardList },
+  {
+    name: 'Laporan',
+    sub: 'Harian & Bulanan',
+    href: '/owner/laporan',
+    icon: FileText,
+  },
+];
+
+// ==========================================
+// OWNER LAYOUT CLIENT
+// ==========================================
+
+function OwnerLayoutContent({
   children,
 }: {
   children: React.ReactNode;
@@ -49,6 +96,10 @@ export default function OwnerLayout({
   const pathname = usePathname();
 
   const [profile, setProfile] = useState<Profile | null>(null);
+
+  // ========================================
+  // LOAD PROFILE FROM DATABASE
+  // ========================================
 
   useEffect(() => {
     const controller = new AbortController();
@@ -64,8 +115,14 @@ export default function OwnerLayout({
 
         const result = await response.json();
 
-        if (!response.ok || !result.success || !result.data) {
-          throw new Error(result.error || 'Gagal mengambil profil.');
+        if (
+          !response.ok ||
+          !result.success ||
+          !result.data
+        ) {
+          throw new Error(
+            result.error || 'Gagal mengambil profil.'
+          );
         }
 
         setProfile({
@@ -75,48 +132,53 @@ export default function OwnerLayout({
         });
       } catch (error) {
         if (!controller.signal.aborted) {
-          console.error('Gagal memuat profil Owner:', error);
+          console.error(
+            'Gagal memuat profil Owner:',
+            error
+          );
         }
       }
     }
 
     loadProfile();
 
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+    };
   }, [pathname]);
 
-  const menuItems = [
-    { name: 'Home Page', href: '/owner', icon: Home },
-    { name: 'Data Produk', href: '/owner/produk', icon: Package },
-    { name: 'Data Bahan Baku', href: '/owner/bahan-baku', icon: Boxes },
-    { name: 'Resep', href: '/owner/resep', icon: BookOpen },
-    { name: 'Data Supplier', href: '/owner/supplier', icon: Truck },
-    {
-      name: 'Pemesanan Bahan Baku',
-      href: '/owner/pemesanan-bahan-baku',
-      icon: ShoppingBag,
-    },
-    { name: 'Pesanan', href: '/owner/pesanan', icon: ClipboardList },
-    {
-      name: 'Laporan',
-      sub: 'Harian & Bulanan',
-      href: '/owner/laporan',
-      icon: FileText,
-    },
-  ];
+  // ========================================
+  // CHECK ACTIVE MENU
+  // ========================================
+
+  function isMenuActive(href: string) {
+    if (href === '/owner') {
+      return pathname === '/owner';
+    }
+
+    return (
+      pathname === href ||
+      pathname.startsWith(href + '/')
+    );
+  }
+
+  // ========================================
+  // MAIN LAYOUT
+  // ========================================
 
   return (
     <div
       style={{
         display: 'flex',
         height: '100vh',
-        width: '100vw',
+        width: '100%',
         backgroundColor: '#e59cae',
         fontFamily: 'system-ui, sans-serif',
         overflow: 'hidden',
       }}
     >
-      {/* SIDEBAR LEFT */}
+      {/* SIDEBAR */}
+
       <aside
         style={{
           width: '240px',
@@ -152,11 +214,7 @@ export default function OwnerLayout({
           >
             {menuItems.map((item) => {
               const Icon = item.icon;
-
-              const isActive =
-                pathname === item.href ||
-                (item.href !== '/owner' &&
-                  pathname.startsWith(item.href));
+              const active = isMenuActive(item.href);
 
               return (
                 <Link
@@ -171,15 +229,21 @@ export default function OwnerLayout({
                     textDecoration: 'none',
                     fontWeight: 600,
                     fontSize: '13px',
-                    backgroundColor: isActive ? '#a02e59' : '#ffffff',
-                    color: isActive ? '#ffffff' : '#ac3562',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                    backgroundColor: active
+                      ? '#a02e59'
+                      : '#ffffff',
+                    color: active
+                      ? '#ffffff'
+                      : '#ac3562',
+                    boxShadow:
+                      '0 2px 4px rgba(0,0,0,0.05)',
                   }}
                 >
                   <Icon size={18} />
 
                   <div>
                     <div>{item.name}</div>
+
                     {item.sub && (
                       <div
                         style={{
@@ -199,6 +263,7 @@ export default function OwnerLayout({
         </div>
 
         {/* BOTTOM BUTTONS */}
+
         <div
           style={{
             display: 'flex',
@@ -215,16 +280,19 @@ export default function OwnerLayout({
               gap: '10px',
               padding: '10px 16px',
               borderRadius: '20px',
-              backgroundColor:
-                pathname === '/owner/profil' ? '#a02e59' : '#ffffff',
-              color:
-                pathname === '/owner/profil' ? '#ffffff' : '#a02e59',
+              backgroundColor: isMenuActive('/owner/profil')
+                ? '#a02e59'
+                : '#ffffff',
+              color: isMenuActive('/owner/profil')
+                ? '#ffffff'
+                : '#a02e59',
               textDecoration: 'none',
               fontSize: '13px',
               fontWeight: 'bold',
             }}
           >
-            <UserCheck size={16} /> Edit Profil
+            <UserCheck size={16} />
+            Edit Profil
           </Link>
 
           <Link
@@ -235,21 +303,25 @@ export default function OwnerLayout({
               gap: '10px',
               padding: '10px 16px',
               borderRadius: '20px',
-              backgroundColor:
-                pathname === '/owner/logout' ? '#a02e59' : '#ffffff',
-              color:
-                pathname === '/owner/logout' ? '#ffffff' : '#a02e59',
+              backgroundColor: pathname === '/owner/logout'
+                ? '#a02e59'
+                : '#ffffff',
+              color: pathname === '/owner/logout'
+                ? '#ffffff'
+                : '#a02e59',
               textDecoration: 'none',
               fontSize: '13px',
               fontWeight: 'bold',
             }}
           >
-            <LogOut size={16} /> Log out
+            <LogOut size={16} />
+            Log out
           </Link>
         </div>
       </aside>
 
-      {/* AREA KANAN UTAMA */}
+      {/* AREA KANAN */}
+
       <div
         style={{
           flex: 1,
@@ -261,6 +333,7 @@ export default function OwnerLayout({
         }}
       >
         {/* HEADER */}
+
         <header
           style={{
             backgroundColor: '#a02e59',
@@ -282,6 +355,8 @@ export default function OwnerLayout({
           >
             Home Page
           </h1>
+
+          {/* PROFILE */}
 
           <div
             style={{
@@ -306,9 +381,13 @@ export default function OwnerLayout({
                   opacity: 0.8,
                 }}
               >
-                {profile ? formatRole(profile.role) : 'Owner'}
+                {profile
+                  ? formatRole(profile.role)
+                  : 'Owner'}
               </div>
             </div>
+
+            {/* AVATAR */}
 
             <div
               style={{
@@ -344,6 +423,7 @@ export default function OwnerLayout({
         </header>
 
         {/* MAIN CONTENT */}
+
         <main
           style={{
             flex: 1,
@@ -352,6 +432,7 @@ export default function OwnerLayout({
             display: 'flex',
             flexDirection: 'column',
             gap: '16px',
+            minHeight: 0,
           }}
         >
           {children}
@@ -369,5 +450,39 @@ export default function OwnerLayout({
         </main>
       </div>
     </div>
+  );
+}
+
+// ==========================================
+// OWNER LAYOUT - SUSPENSE BOUNDARY
+// ==========================================
+
+export default function OwnerLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <div
+          style={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#e59cae',
+            color: '#702643',
+            fontFamily: 'system-ui, sans-serif',
+          }}
+        >
+          Memuat halaman Owner...
+        </div>
+      }
+    >
+      <OwnerLayoutContent>
+        {children}
+      </OwnerLayoutContent>
+    </Suspense>
   );
 }

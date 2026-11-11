@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -27,14 +27,16 @@ type Profile = {
 };
 
 function getInitials(nama: string) {
-  return nama
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word[0])
-    .join('')
-    .toUpperCase() || 'U';
+  return (
+    nama
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((word) => word[0])
+      .join('')
+      .toUpperCase() || 'U'
+  );
 }
 
 function formatRole(role: string) {
@@ -74,7 +76,8 @@ const MENU_ITEMS = [
   { name: 'Laporan', href: '/admin/laporan', icon: BarChart3 },
 ];
 
-export default function AdminLayout({
+// Komponen internal yang menggunakan usePathname.
+function AdminLayoutContent({
   children,
 }: {
   children: React.ReactNode;
@@ -83,6 +86,7 @@ export default function AdminLayout({
 
   const [profile, setProfile] = useState<Profile | null>(null);
 
+  // Mengambil profil pengguna yang sedang login.
   useEffect(() => {
     const controller = new AbortController();
 
@@ -98,7 +102,9 @@ export default function AdminLayout({
         const result = await response.json();
 
         if (!response.ok || !result.success || !result.data) {
-          throw new Error(result.error || 'Gagal mengambil profil.');
+          throw new Error(
+            result.error || 'Gagal mengambil profil.'
+          );
         }
 
         setProfile({
@@ -118,22 +124,35 @@ export default function AdminLayout({
     return () => controller.abort();
   }, [pathname]);
 
+  // Menentukan judul halaman berdasarkan URL.
   const getTitle = () => {
     if (pathname === '/admin') return 'Dashboard Admin';
     if (pathname.startsWith('/admin/pesanan')) return 'Data Pesanan';
     if (pathname.startsWith('/admin/produk')) return 'Data Produk';
-    if (pathname.startsWith('/admin/bahan-baku'))
+
+    if (pathname.startsWith('/admin/bahan-baku')) {
       return 'Data Bahan Baku';
+    }
+
     if (pathname.startsWith('/admin/resep')) return 'Resep';
     if (pathname.startsWith('/admin/supplier')) return 'Data Supplier';
-    if (pathname.startsWith('/admin/pemesanan-bahan-baku'))
+
+    if (pathname.startsWith('/admin/pemesanan-bahan-baku')) {
       return 'Pemesanan Bahan Baku';
-    if (pathname.startsWith('/admin/kapasitas'))
+    }
+
+    if (pathname.startsWith('/admin/kapasitas')) {
       return 'Kapasitas Produksi';
-    if (pathname.startsWith('/admin/hasil-produksi'))
+    }
+
+    if (pathname.startsWith('/admin/hasil-produksi')) {
       return 'Hasil Produksi';
-    if (pathname.startsWith('/admin/pengguna'))
+    }
+
+    if (pathname.startsWith('/admin/pengguna')) {
       return 'Manajemen Pengguna';
+    }
+
     if (pathname.startsWith('/admin/laporan')) return 'Laporan';
     if (pathname === '/admin/profil') return 'Edit Profil';
     if (pathname === '/admin/logout') return 'Log out';
@@ -319,6 +338,7 @@ export default function AdminLayout({
               gap: '12px',
             }}
           >
+            {/* INFORMASI PROFIL */}
             <div style={{ textAlign: 'right' }}>
               <div
                 style={{
@@ -339,6 +359,7 @@ export default function AdminLayout({
               </div>
             </div>
 
+            {/* AVATAR */}
             <div
               style={{
                 width: '38px',
@@ -387,5 +408,36 @@ export default function AdminLayout({
         </main>
       </div>
     </div>
+  );
+}
+
+// Wrapper Suspense untuk mengatasi error prerender usePathname.
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <div
+          style={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#e9d5ff',
+            color: '#6b21a8',
+            fontFamily: 'system-ui, sans-serif',
+          }}
+        >
+          Memuat halaman admin...
+        </div>
+      }
+    >
+      <AdminLayoutContent>
+        {children}
+      </AdminLayoutContent>
+    </Suspense>
   );
 }

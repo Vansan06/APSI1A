@@ -1,89 +1,79 @@
+
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Plus, Check, Boxes, AlertTriangle, Wallet } from 'lucide-react';
+import {
+  Plus,
+  Check,
+  Info,
+  Box,
+  Layers,
+  BookOpen,
+} from 'lucide-react';
 
-export interface BahanBakuItem {
-  id: string; // Kode e.g. BB-001
+export interface ProdukItem {
+  id: string;
   nama: string;
-  supplier: string;
+  kodeSatuan: string;
+  kategori: string;
+  hargaJual: string;
   stok: string;
-  minimum: string;
-  hargaSatuan: string;
-  kondisi: 'Aman' | 'Stok rendah';
+  status: 'Aktif' | 'Nonaktif';
+  imageSrc: string;
 }
 
-export const BAHAN_BAKU_LIST: BahanBakuItem[] = [
+export const KATALOG_PRODUK_LIST: ProdukItem[] = [
   {
-    id: 'BB-001',
-    nama: 'Tepung Terigu',
-    supplier: 'CV Sumber Pangan',
-    stok: '125 kg',
-    minimum: '50 kg',
-    hargaSatuan: 'Rp12.000 / kg',
-    kondisi: 'Aman',
+    id: 'PRD-001',
+    nama: 'Donat Cokelat',
+    kodeSatuan: 'PRD-001 • per pcs',
+    kategori: 'Donat',
+    hargaJual: 'Rp8.000',
+    stok: '60 pcs',
+    status: 'Aktif',
+    imageSrc: '/donat-cokelat.png',
   },
   {
-    id: 'BB-002',
-    nama: 'Gula Pasir',
-    supplier: 'CV Sumber Pangan',
-    stok: '60 kg',
-    minimum: '25 kg',
-    hargaSatuan: 'Rp17.000 / kg',
-    kondisi: 'Aman',
+    id: 'PRD-002',
+    nama: 'Donat Keju',
+    kodeSatuan: 'PRD-002 • per pcs',
+    kategori: 'Donat',
+    hargaJual: 'Rp9.000',
+    stok: '40 pcs',
+    status: 'Aktif',
+    imageSrc: '/donat-keju.png',
   },
   {
-    id: 'BB-003',
-    nama: 'Mentega',
-    supplier: 'PT Prima Dairy',
-    stok: '8 kg',
-    minimum: '15 kg',
-    hargaSatuan: 'Rp80.000 / kg',
-    kondisi: 'Stok rendah',
+    id: 'PRD-003',
+    nama: 'Donat Gula',
+    kodeSatuan: 'PRD-003 • per pcs',
+    kategori: 'Donat',
+    hargaJual: 'Rp12.000',
+    stok: '45 pcs',
+    status: 'Aktif',
+    imageSrc: '/donat-gula.png',
   },
   {
-    id: 'BB-004',
-    nama: 'Cokelat Batang',
-    supplier: 'PT Cokelat Nusantara',
-    stok: '6 kg',
-    minimum: '10 kg',
-    hargaSatuan: 'Rp70.000 / kg',
-    kondisi: 'Stok rendah',
-  },
-  {
-    id: 'BB-005',
-    nama: 'Telur',
-    supplier: 'Ternak Makmur',
-    stok: '30 kg',
-    minimum: '15 kg',
-    hargaSatuan: 'Rp28.000 / kg',
-    kondisi: 'Aman',
-  },
-  {
-    id: 'BB-006',
-    nama: 'Keju Cheddar',
-    supplier: 'PT Prima Dairy',
-    stok: '18 kg',
-    minimum: '10 kg',
-    hargaSatuan: 'Rp95.000 / kg',
-    kondisi: 'Aman',
+    id: 'PRD-004',
+    nama: 'Donat Stroberi',
+    kodeSatuan: 'PRD-004 • per pcs',
+    kategori: 'Donat',
+    hargaJual: 'Rp11.800',
+    stok: '20 pcs',
+    status: 'Aktif',
+    imageSrc: '/donat-stroberi.png',
   },
 ];
 
-export default function AdminDataBahanBakuPage() {
+// Komponen halaman produk
+function AdminDataProdukContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [bahanRows, setBahanRows] = useState<BahanBakuItem[]>(BAHAN_BAKU_LIST);
-  useEffect(() => {
-    fetch("/api/bahan-baku").then(r=>r.json()).then(r=>{
-      if(r.success) setBahanRows(r.data.map((b:any)=>({id:b.id_bahan_baku,nama:b.nama_bahan||"-",supplier:"-",stok:`${Number(b.stok_tersedia||0)} kg`,minimum:`${Number(b.stok_minimal||0)} kg`,hargaSatuan:`Rp${Number(b.harga_satuan||0).toLocaleString("id-ID")}`,kondisi:Number(b.stok_tersedia||0)<=Number(b.stok_minimal||0)?"Stok rendah":"Aman"})));
-    }).catch(console.error);
-  }, []);
-
 
   const notifyType = searchParams.get('notify');
+
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalDesc, setModalDesc] = useState('');
@@ -91,142 +81,362 @@ export default function AdminDataBahanBakuPage() {
   useEffect(() => {
     if (notifyType === 'simpan') {
       setModalTitle('Berhasil disimpan');
-      setModalDesc('Data bahan baku berhasil disimpan.');
+      setModalDesc('Data berhasil disimpan.');
       setShowModal(true);
     } else if (notifyType === 'edit') {
       setModalTitle('Berhasil diedit');
-      setModalDesc('Data bahan baku berhasil diedit.');
+      setModalDesc('Data berhasil diedit.');
       setShowModal(true);
     } else if (notifyType === 'hapus') {
       setModalTitle('Berhasil dihapus');
-      setModalDesc('Data bahan baku berhasil dihapus.');
+      setModalDesc('Data berhasil dihapus.');
       setShowModal(true);
     }
   }, [notifyType]);
 
   const handleCloseModal = () => {
     setShowModal(false);
-    router.push('/admin/bahan-baku');
+    router.push('/admin/produk');
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      
-      {/* HEADER UTAMA (TANPA TOMBOL EKSPOR) */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px',
+      }}
+    >
+
+      {/* HEADER UTAMA */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <div>
-          <h2 style={{ fontSize: '24px', color: '#6b21a8', margin: 0, fontWeight: 'bold' }}>
-            Data Bahan Baku
+          <h2
+            style={{
+              fontSize: '24px',
+              color: '#6b21a8',
+              margin: 0,
+              fontWeight: 'bold',
+            }}
+          >
+            Data Produk
           </h2>
         </div>
       </div>
 
       {/* 3 KARTU STATISTIK ATAS */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
-        
-        {/* CARD 1: JENIS BAHAN */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '16px',
+        }}
+      >
+
+        {/* CARD 1 */}
         <div style={statCardStyle}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '11px', color: '#777777' }}>Jenis bahan</div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#6b21a8', margin: '4px 0' }}>
-              8 bahan
+            <div style={{ fontSize: '11px', color: '#777777' }}>
+              Produk aktif
             </div>
-            <div style={{ fontSize: '10px', color: '#888888' }}>Tersimpan di gudang utama</div>
+
+            <div
+              style={{
+                fontSize: '24px',
+                fontWeight: 'bold',
+                color: '#6b21a8',
+                margin: '4px 0',
+              }}
+            >
+              4 produk
+            </div>
+
+            <div style={{ fontSize: '10px', color: '#888888' }}>
+              4 varian donat
+            </div>
           </div>
+
           <div style={iconBadgeStyle}>
-            <Boxes size={20} color="#6b21a8" />
+            <Box size={20} color="#6b21a8" />
           </div>
         </div>
 
-        {/* CARD 2: DI BAWAH MINIMUM */}
+        {/* CARD 2 */}
         <div style={statCardStyle}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '11px', color: '#777777' }}>Di bawah minimum</div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#6b21a8', margin: '4px 0' }}>
-              2 bahan
+            <div style={{ fontSize: '11px', color: '#777777' }}>
+              Stok siap jual
             </div>
-            <div style={{ fontSize: '10px', color: '#888888' }}>Mentega dan cokelat batang</div>
+
+            <div
+              style={{
+                fontSize: '24px',
+                fontWeight: 'bold',
+                color: '#6b21a8',
+                margin: '4px 0',
+              }}
+            >
+              165 unit
+            </div>
+
+            <div style={{ fontSize: '10px', color: '#888888' }}>
+              Setelah alokasi pesanan hari ini
+            </div>
           </div>
-          <div style={{ ...iconBadgeStyle, backgroundColor: '#fef3c7' }}>
-            <AlertTriangle size={20} color="#b45309" />
+
+          <div style={iconBadgeStyle}>
+            <Layers size={20} color="#6b21a8" />
           </div>
         </div>
 
-        {/* CARD 3: NILAI PERSEDIAAN */}
+        {/* CARD 3 */}
         <div style={statCardStyle}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '11px', color: '#777777' }}>Nilai persediaan</div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#6b21a8', margin: '4px 0' }}>
-              Rp6.840.000
+            <div style={{ fontSize: '11px', color: '#777777' }}>
+              Resep terhubung
             </div>
-            <div style={{ fontSize: '10px', color: '#888888' }}>Berdasarkan harga beli terakhir</div>
+
+            <div
+              style={{
+                fontSize: '24px',
+                fontWeight: 'bold',
+                color: '#6b21a8',
+                margin: '4px 0',
+              }}
+            >
+              4 dari 4
+            </div>
+
+            <div style={{ fontSize: '10px', color: '#888888' }}>
+              Semua produk memiliki resep
+            </div>
           </div>
+
           <div style={iconBadgeStyle}>
-            <Wallet size={20} color="#6b21a8" />
+            <BookOpen size={20} color="#6b21a8" />
           </div>
         </div>
 
       </div>
 
-      {/* TABEL PERSEDIAAN BAHAN BAKU */}
-      <div style={{ backgroundColor: '#ffffff', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h3 style={{ fontSize: '16px', color: '#6b21a8', margin: 0, fontWeight: 'bold' }}>Persediaan bahan baku</h3>
-          <span style={{ fontSize: '11px', color: '#888' }}>8 data</span>
+      {/* KATALOG PRODUK TABLE */}
+      <div
+        style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '16px',
+          padding: '24px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '16px',
+          }}
+        >
+          <h3
+            style={{
+              fontSize: '16px',
+              color: '#6b21a8',
+              margin: 0,
+              fontWeight: 'bold',
+            }}
+          >
+            Katalog produk
+          </h3>
+
+          <span style={{ fontSize: '11px', color: '#888' }}>
+            4 data
+          </span>
         </div>
 
         {/* SEARCH & FILTER BAR */}
-        <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: '12px',
+            marginBottom: '16px',
+          }}
+        >
           <input
             type="text"
-            placeholder="Cari kode atau nama bahan..."
-            style={{ flex: 1, padding: '8px 14px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '12px', outline: 'none' }}
+            placeholder="Cari kode atau nama produk..."
+            style={{
+              flex: 1,
+              padding: '8px 14px',
+              borderRadius: '8px',
+              border: '1px solid #e2e8f0',
+              fontSize: '12px',
+              outline: 'none',
+            }}
           />
-          <select style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '12px' }}>
-            <option>Semua kondisi</option>
-            <option>Aman</option>
-            <option>Stok rendah</option>
+
+          <select
+            style={{
+              padding: '8px 14px',
+              borderRadius: '8px',
+              border: '1px solid #e2e8f0',
+              fontSize: '12px',
+            }}
+          >
+            <option>Semua kategori</option>
+            <option>Donat</option>
           </select>
-          <select style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '12px' }}>
-            <option>Gudang utama</option>
+
+          <select
+            style={{
+              padding: '8px 14px',
+              borderRadius: '8px',
+              border: '1px solid #e2e8f0',
+              fontSize: '12px',
+            }}
+          >
+            <option>Produk aktif</option>
+            <option>Nonaktif</option>
           </select>
         </div>
 
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+        <table
+          style={{
+            width: '100%',
+            borderCollapse: 'collapse',
+            fontSize: '12px',
+          }}
+        >
           <thead>
-            <tr style={{ backgroundColor: '#fdf2f8', color: '#86198f', textAlign: 'left' }}>
-              <th style={{ padding: '10px 12px', borderRadius: '6px 0 0 6px' }}>Bahan baku</th>
-              <th style={{ padding: '10px 12px' }}>Stok</th>
-              <th style={{ padding: '10px 12px' }}>Minimum</th>
-              <th style={{ padding: '10px 12px' }}>Harga / satuan</th>
-              <th style={{ padding: '10px 12px' }}>Kondisi</th>
-              <th style={{ padding: '10px 12px', borderRadius: '0 6px 6px 0' }}>Aksi</th>
+            <tr
+              style={{
+                backgroundColor: '#fdf2f8',
+                color: '#86198f',
+                textAlign: 'left',
+              }}
+            >
+              <th style={{ padding: '10px 12px', borderRadius: '6px 0 0 6px' }}>
+                Produk
+              </th>
+              <th style={{ padding: '10px 12px' }}>
+                Kategori
+              </th>
+              <th style={{ padding: '10px 12px' }}>
+                Harga jual
+              </th>
+              <th style={{ padding: '10px 12px' }}>
+                Stok tersedia
+              </th>
+              <th style={{ padding: '10px 12px' }}>
+                Status
+              </th>
+              <th style={{ padding: '10px 12px', borderRadius: '0 6px 6px 0' }}>
+                Aksi
+              </th>
             </tr>
           </thead>
+
           <tbody>
-            {bahanRows.map((item) => (
-              <tr key={item.id} style={{ borderBottom: '1px solid #fdf2f8' }}>
+            {KATALOG_PRODUK_LIST.map((item) => (
+              <tr
+                key={item.id}
+                style={{ borderBottom: '1px solid #fdf2f8' }}
+              >
                 <td style={{ padding: '12px' }}>
-                  <div style={{ fontWeight: 'bold', color: '#333' }}>{item.nama}</div>
-                  <div style={{ fontSize: '10px', color: '#777' }}>{item.id} • {item.supplier}</div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                    }}
+                  >
+                    <img
+                      src={item.imageSrc}
+                      alt={item.nama}
+                      style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '6px',
+                        objectFit: 'cover',
+                        backgroundColor: '#f3e8ff',
+                      }}
+                    />
+
+                    <div>
+                      <div style={{ fontWeight: 'bold', color: '#333' }}>
+                        {item.nama}
+                      </div>
+
+                      <div style={{ fontSize: '10px', color: '#777' }}>
+                        {item.kodeSatuan}
+                      </div>
+                    </div>
+                  </div>
                 </td>
-                <td style={{ padding: '12px', color: '#333' }}>{item.stok}</td>
-                <td style={{ padding: '12px', color: '#333' }}>{item.minimum}</td>
-                <td style={{ padding: '12px', color: '#333' }}>{item.hargaSatuan}</td>
+
+                <td style={{ padding: '12px', color: '#333' }}>
+                  {item.kategori}
+                </td>
+
+                <td
+                  style={{
+                    padding: '12px',
+                    fontWeight: 'bold',
+                    color: '#333',
+                  }}
+                >
+                  {item.hargaJual}
+                </td>
+
+                <td style={{ padding: '12px', color: '#333' }}>
+                  {item.stok}
+                </td>
+
                 <td style={{ padding: '12px' }}>
-                  <span style={getKondisiBadgeStyle(item.kondisi)}>
-                    {item.kondisi}
+                  <span
+                    style={{
+                      backgroundColor: '#e6f4ea',
+                      color: '#137333',
+                      padding: '4px 10px',
+                      borderRadius: '12px',
+                      fontSize: '11px',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {item.status}
                   </span>
                 </td>
+
                 <td style={{ padding: '12px' }}>
-                  <div style={{ display: 'flex', gap: '8px', fontSize: '11px' }}>
-                    <Link href={`/admin/bahan-baku/${item.id}`} style={{ color: '#6b21a8', textDecoration: 'none', fontWeight: '500' }}>
-                      Lihat Detail Bahan Baku
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: '8px',
+                      fontSize: '11px',
+                    }}
+                  >
+                    <Link
+                      href={`/admin/produk/${item.id}`}
+                      style={actionLinkStyle}
+                    >
+                      Lihat Detail Produk
                     </Link>
-                    <Link href={`/admin/bahan-baku/${item.id}/edit`} style={{ color: '#6b21a8', textDecoration: 'none', fontWeight: '500' }}>
+
+                    <Link
+                      href={`/admin/produk/${item.id}/edit`}
+                      style={actionLinkStyle}
+                    >
                       Edit
                     </Link>
-                    <Link href={`/admin/bahan-baku/${item.id}/hapus`} style={{ color: '#6b21a8', textDecoration: 'none', fontWeight: '500' }}>
+
+                    <Link
+                      href={`/admin/produk/${item.id}/hapus`}
+                      style={actionLinkStyle}
+                    >
                       Hapus
                     </Link>
                   </div>
@@ -237,10 +447,84 @@ export default function AdminDataBahanBakuPage() {
         </table>
       </div>
 
-      {/* TOMBOL TAMBAH BAHAN */}
+      {/* INFO CARD BANNER BOTTOM */}
+      <div
+        style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '12px',
+          padding: '16px 20px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+          }}
+        >
+          <div
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              backgroundColor: '#f3e8ff',
+              color: '#6b21a8',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Info size={16} />
+          </div>
+
+          <div>
+            <div
+              style={{
+                fontSize: '12px',
+                fontWeight: 'bold',
+                color: '#333',
+              }}
+            >
+              Stok diperbarui dari hasil produksi
+            </div>
+
+            <div
+              style={{
+                fontSize: '11px',
+                color: '#666',
+                marginTop: '2px',
+              }}
+            >
+              Produk yang lolos pemeriksaan mutu otomatis tercatat sebagai
+              stok. Alokasi pesanan dipisahkan dari stok siap jual.
+            </div>
+          </div>
+        </div>
+
+        <Link
+          href="/admin/hasil-produksi"
+          style={{
+            fontSize: '11px',
+            color: '#6b21a8',
+            border: '1px solid #6b21a8',
+            padding: '6px 14px',
+            borderRadius: '16px',
+            textDecoration: 'none',
+            fontWeight: 'bold',
+          }}
+        >
+          Hasil Produksi
+        </Link>
+      </div>
+
+      {/* TOMBOL TAMBAH PRODUK */}
       <div>
         <Link
-          href="/admin/bahan-baku/tambah"
+          href="/admin/produk/tambah"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -255,20 +539,84 @@ export default function AdminDataBahanBakuPage() {
           }}
         >
           <Plus size={16} />
-          <span>Tambah Bahan</span>
+          <span>Tambah Produk</span>
         </Link>
       </div>
 
       {/* MODAL NOTIFIKASI BERHASIL */}
       {showModal && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
-          <div style={{ backgroundColor: '#ffffff', borderRadius: '20px', padding: '32px', width: '380px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.2)' }}>
-            <div style={{ width: '56px', height: '56px', borderRadius: '50%', backgroundColor: '#f3e8ff', color: '#6b21a8', margin: '0 auto 16px auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.45)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 100,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '20px',
+              padding: '32px',
+              width: '380px',
+              textAlign: 'center',
+              boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+            }}
+          >
+            <div
+              style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '50%',
+                backgroundColor: '#f3e8ff',
+                color: '#6b21a8',
+                margin: '0 auto 16px auto',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
               <Check size={28} strokeWidth={3} />
             </div>
-            <h3 style={{ fontSize: '20px', color: '#6b21a8', margin: '0 0 8px 0', fontWeight: 'bold' }}>{modalTitle}</h3>
-            <p style={{ fontSize: '13px', color: '#666', margin: '0 0 24px 0' }}>{modalDesc}</p>
-            <button onClick={handleCloseModal} style={{ width: '100%', padding: '12px', backgroundColor: '#581c87', color: '#ffffff', border: 'none', borderRadius: '12px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer' }}>
+
+            <h3
+              style={{
+                fontSize: '20px',
+                color: '#6b21a8',
+                margin: '0 0 8px 0',
+                fontWeight: 'bold',
+              }}
+            >
+              {modalTitle}
+            </h3>
+
+            <p
+              style={{
+                fontSize: '13px',
+                color: '#666',
+                margin: '0 0 24px 0',
+              }}
+            >
+              {modalDesc}
+            </p>
+
+            <button
+              onClick={handleCloseModal}
+              style={{
+                width: '100%',
+                padding: '12px',
+                backgroundColor: '#581c87',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '12px',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+              }}
+            >
               Selesai
             </button>
           </div>
@@ -276,6 +624,28 @@ export default function AdminDataBahanBakuPage() {
       )}
 
     </div>
+  );
+}
+
+// Komponen utama dengan Suspense.
+// useSearchParams hanya digunakan di dalam komponen yang dibungkus Suspense.
+export default function AdminDataProdukPage() {
+  return (
+    <Suspense
+      fallback={
+        <div
+          style={{
+            padding: '24px',
+            color: '#6b21a8',
+            fontSize: '14px',
+          }}
+        >
+          Memuat data produk...
+        </div>
+      }
+    >
+      <AdminDataProdukContent />
+    </Suspense>
   );
 }
 
@@ -299,10 +669,8 @@ const iconBadgeStyle: React.CSSProperties = {
   justifyContent: 'center',
 };
 
-function getKondisiBadgeStyle(kondisi: string): React.CSSProperties {
-  if (kondisi === 'Aman') {
-    return { backgroundColor: '#e6f4ea', color: '#137333', padding: '4px 10px', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold' };
-  } else {
-    return { backgroundColor: '#fef3c7', color: '#b45309', padding: '4px 10px', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold' };
-  }
-}
+const actionLinkStyle: React.CSSProperties = {
+  color: '#6b21a8',
+  textDecoration: 'none',
+  fontWeight: '500',
+};
