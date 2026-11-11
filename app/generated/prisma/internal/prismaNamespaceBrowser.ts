@@ -64,7 +64,10 @@ export const ModelName = {
   detail_pesanan_bahan_baku: 'detail_pesanan_bahan_baku',
   detail_pesanan_produk: 'detail_pesanan_produk',
   penugasan_karyawan_produk: 'penugasan_karyawan_produk',
-  resep_bahan_baku: 'resep_bahan_baku'
+  resep_bahan_baku: 'resep_bahan_baku',
+  akun_pengguna: 'akun_pengguna',
+  hasil_produksi: 'hasil_produksi',
+  kapasitas_harian: 'kapasitas_harian'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -170,6 +173,7 @@ export const ProdukScalarFieldEnum = {
   jumlah_target: 'jumlah_target',
   jumlah_berhasil: 'jumlah_berhasil',
   nama_produk: 'nama_produk',
+  gambar_url: 'gambar_url',
   harga_jual: 'harga_jual',
   id_admin: 'id_admin',
   id_owner: 'id_owner',
@@ -245,6 +249,51 @@ export const Resep_bahan_bakuScalarFieldEnum = {
 } as const
 
 export type Resep_bahan_bakuScalarFieldEnum = (typeof Resep_bahan_bakuScalarFieldEnum)[keyof typeof Resep_bahan_bakuScalarFieldEnum]
+
+
+export const Akun_penggunaScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  email: 'email',
+  password_hash: 'password_hash',
+  role: 'role',
+  ref_id: 'ref_id',
+  avatar_url: 'avatar_url',
+  phone: 'phone',
+  alamat: 'alamat',
+  aktif: 'aktif',
+  akses_terakhir: 'akses_terakhir',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Akun_penggunaScalarFieldEnum = (typeof Akun_penggunaScalarFieldEnum)[keyof typeof Akun_penggunaScalarFieldEnum]
+
+
+export const Hasil_produksiScalarFieldEnum = {
+  id: 'id',
+  id_produk: 'id_produk',
+  tanggal: 'tanggal',
+  jumlah_target: 'jumlah_target',
+  jumlah_berhasil: 'jumlah_berhasil',
+  jumlah_ditolak: 'jumlah_ditolak',
+  catatan_mutu: 'catatan_mutu',
+  id_karyawan: 'id_karyawan',
+  created_at: 'created_at'
+} as const
+
+export type Hasil_produksiScalarFieldEnum = (typeof Hasil_produksiScalarFieldEnum)[keyof typeof Hasil_produksiScalarFieldEnum]
+
+
+export const Kapasitas_harianScalarFieldEnum = {
+  tanggal: 'tanggal',
+  kapasitas_total: 'kapasitas_total',
+  kapasitas_terpakai: 'kapasitas_terpakai',
+  jam_operasional: 'jam_operasional',
+  updated_at: 'updated_at'
+} as const
+
+export type Kapasitas_harianScalarFieldEnum = (typeof Kapasitas_harianScalarFieldEnum)[keyof typeof Kapasitas_harianScalarFieldEnum]
 
 
 export const SortOrder = {

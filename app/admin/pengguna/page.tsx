@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Users, 
   Shield, 
@@ -56,6 +56,8 @@ const PENGGUNA_LIST: PenggunaItem[] = [
 
 export default function AdminManajemenPenggunaPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [penggunaRows, setPenggunaRows] = useState<PenggunaItem[]>(PENGGUNA_LIST);
+  useEffect(() => { fetch("/api/pengguna").then(r=>r.json()).then(r=>{if(r.success)setPenggunaRows(r.data.map((u:any)=>({id:u.id,nama:u.nama,email:u.email,peran:u.role,aksesTerakhir:u.akses_terakhir?new Date(u.akses_terakhir).toLocaleString("id-ID"):"Belum pernah masuk",status:u.aktif?"Aktif":"Nonaktif"})))}).catch(console.error); }, []);
   const [filterPeran, setFilterPeran] = useState('Semua peran');
   const [filterStatus, setFilterStatus] = useState('Semua status');
 
@@ -180,7 +182,7 @@ export default function AdminManajemenPenggunaPage() {
             </tr>
           </thead>
           <tbody>
-            {PENGGUNA_LIST.map((item) => (
+            {penggunaRows.map((item) => (
               <tr key={item.id} style={{ borderBottom: '1px solid #fdf2f8' }}>
                 <td style={{ padding: '12px' }}>
                   <div style={{ fontWeight: 'bold', color: '#333' }}>{item.nama}</div>

@@ -90,8 +90,10 @@ export default function EditProdukAdminPage() {
     setResepTerhubung(data.resepName);
   }, [id]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const response=await fetch(`/api/produk/${encodeURIComponent(id)}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({nama_produk:namaProduk,harga_jual:Number(hargaJual.replace(/[^0-9]/g,"")),jumlah_berhasil:Number(stokTersedia)})});
+    if(!response.ok){const result=await response.json();alert(result.error||"Gagal menyimpan perubahan.");return;}
     router.push('/admin/produk?notify=edit');
   };
 

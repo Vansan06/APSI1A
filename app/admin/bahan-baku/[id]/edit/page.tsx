@@ -105,8 +105,10 @@ export default function EditBahanBakuAdminPage() {
     setStatusPersediaan(data.statusPersediaan);
   }, [id]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const response=await fetch(`/api/bahan-baku/${encodeURIComponent(id)}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({nama_bahan:namaBahan,stok_tersedia:Number(stokTersedia),stok_minimal:Number(stokMinimum),harga_satuan:Number(hargaSatuan.replace(/[^0-9]/g,""))})});
+    if(!response.ok){const result=await response.json();alert(result.error||"Gagal menyimpan perubahan.");return;}
     router.push('/admin/bahan-baku?notify=edit');
   };
 

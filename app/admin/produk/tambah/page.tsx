@@ -17,8 +17,10 @@ export default function AdminTambahProdukPage() {
   const [statusProduk, setStatusProduk] = useState('');
   const [resepTerhubung, setResepTerhubung] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const response = await fetch("/api/produk", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id_produk:kodeProduk,nama_produk:namaProduk,harga_jual:Number(hargaJual.replace(/[^0-9]/g,"")),jumlah_berhasil:Number(stokAwal)})});
+    if(!response.ok){const result=await response.json();alert(result.error||"Gagal menyimpan produk.");return;}
     router.push('/admin/produk?notify=simpan');
   };
 

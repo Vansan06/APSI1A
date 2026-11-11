@@ -62,6 +62,13 @@ export const PESANAN_DATA_LIST: PesananItem[] = [
 export default function AdminDataPesananPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [pesananRows, setPesananRows] = useState<PesananItem[]>(PESANAN_DATA_LIST);
+  useEffect(() => {
+    fetch("/api/pesanan").then(r=>r.json()).then(r=>{
+      if(r.success) setPesananRows(r.data.map((o:any)=>({id:o.id_pesanan,waktu:new Date(o.tanggal_pesanan).toLocaleDateString("id-ID"),pelanggan:o.nama_pelanggan||"-",produk:o.detail_pesanan_produk?.map((d:any)=>d.produk?.nama_produk).join(", ")||"-",jumlah:o.detail_pesanan_produk?.reduce((s:number,d:any)=>s+d.jumlah,0)+" pcs",total:"Rp"+Number(o.total_biaya_pesanan||0).toLocaleString("id-ID"),status:o.status||"Diproses",imageSrc:"/donat-cokelat.png"})));
+    }).catch(console.error);
+  }, []);
+
 
   const notifyType = searchParams.get('notify');
   const [showModal, setShowModal] = useState(false);
@@ -165,7 +172,7 @@ export default function AdminDataPesananPage() {
             </tr>
           </thead>
           <tbody>
-            {PESANAN_DATA_LIST.map((item) => (
+            {pesananRows.map((item) => (
               <tr key={item.id} style={{ borderBottom: '1px solid #fdf2f8' }}>
                 <td style={{ padding: '12px' }}>
                   <div style={{ fontWeight: 'bold', color: '#6b21a8' }}>{item.id}</div>

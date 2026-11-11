@@ -93,12 +93,12 @@ export type resep_standar = Prisma.resep_standarModel
 export type supplier = Prisma.supplierModel
 /**
  * Model detail_pesanan_bahan_baku
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+ * 
  */
 export type detail_pesanan_bahan_baku = Prisma.detail_pesanan_bahan_bakuModel
 /**
  * Model detail_pesanan_produk
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+ * 
  */
 export type detail_pesanan_produk = Prisma.detail_pesanan_produkModel
 /**
@@ -108,6 +108,21 @@ export type detail_pesanan_produk = Prisma.detail_pesanan_produkModel
 export type penugasan_karyawan_produk = Prisma.penugasan_karyawan_produkModel
 /**
  * Model resep_bahan_baku
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+ * 
  */
 export type resep_bahan_baku = Prisma.resep_bahan_bakuModel
+/**
+ * Model akun_pengguna
+ * 
+ */
+export type akun_pengguna = Prisma.akun_penggunaModel
+/**
+ * Model hasil_produksi
+ * 
+ */
+export type hasil_produksi = Prisma.hasil_produksiModel
+/**
+ * Model kapasitas_harian
+ * 
+ */
+export type kapasitas_harian = Prisma.kapasitas_harianModel

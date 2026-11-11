@@ -72,6 +72,13 @@ export const PEMESANAN_LIST: PemesananItem[] = [
 export default function AdminPemesananBahanBakuPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [poRows, setPoRows] = useState<PemesananItem[]>(PEMESANAN_LIST);
+  useEffect(() => {
+    fetch("/api/pemesanan-bahan-baku").then(r=>r.json()).then(r=>{
+      if(r.success) setPoRows(r.data.map((p:any)=>({id:p.id_pengadaan,tanggal:new Date(p.tanggal_pesanan).toLocaleDateString("id-ID"),supplier:p.supplier?.nama_supplier||"-",bahanBaku:p.detail_pesanan_bahan_baku?.map((d:any)=>d.bahan_baku?.nama_bahan).join(", ")||"-",jumlah:p.detail_pesanan_bahan_baku?.reduce((s:number,d:any)=>s+Number(d.jumlah),0)+"",total:"Rp"+Number(p.total_biaya||0).toLocaleString("id-ID"),estimasiTiba:"-",status:p.status==="Menunggu Supplier"?"Dikonfirmasi":p.status==="Diterima"?"Diterima":"Dikirim",tujuan:"DFO Donat",catatanStatus:p.status})));
+    }).catch(console.error);
+  }, []);
+
 
   const notifyType = searchParams.get('notify');
   const [selectedId, setSelectedId] = useState<string>('PO-261024-01');
@@ -79,7 +86,7 @@ export default function AdminPemesananBahanBakuPage() {
   const [modalTitle, setModalTitle] = useState('');
   const [modalDesc, setModalDesc] = useState('');
 
-  const activeItem = PEMESANAN_LIST.find((p) => p.id === selectedId) || PEMESANAN_LIST[0];
+  const activeItem = poRows.find((p) => p.id === selectedId) || poRows[0];
 
   useEffect(() => {
     if (notifyType === 'simpan') {
@@ -197,7 +204,7 @@ export default function AdminPemesananBahanBakuPage() {
             </tr>
           </thead>
           <tbody>
-            {PEMESANAN_LIST.map((item) => {
+            {poRows.map((item) => {
               const badge = getStatusBadge(item.status);
               const isSelected = item.id === selectedId;
               return (

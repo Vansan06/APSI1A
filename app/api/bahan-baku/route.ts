@@ -1,0 +1,3 @@
+import{prisma}from"@/lib/prisma";import{requireRole}from"@/lib/auth";import{ok,fail}from"@/lib/http";import{newId}from"@/lib/ids";
+export async function GET(){const a=await requireRole();if(a.response)return a.response;return ok(await prisma.bahan_baku.findMany({orderBy:{nama_bahan:"asc"}}));}
+export async function POST(r:Request){const a=await requireRole(["admin"]);if(a.response)return a.response;const b=await r.json();if(!b.nama_bahan)return fail("Nama bahan wajib diisi.");const x=await prisma.bahan_baku.create({data:{id_bahan_baku:b.id_bahan_baku||newId("BB"),nama_bahan:b.nama_bahan,stok_tersedia:b.stok_tersedia??0,stok_minimal:b.stok_minimal??0,harga_satuan:b.harga_satuan??0,id_supplier:b.id_supplier??null}});return ok(x,201);}

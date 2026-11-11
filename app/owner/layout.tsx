@@ -1,5 +1,7 @@
+
 'use client';
 
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -15,8 +17,73 @@ import {
   LogOut,
 } from 'lucide-react';
 
-export default function OwnerLayout({ children }: { children: React.ReactNode }) {
+type Profile = {
+  nama: string;
+  role: string;
+  avatar_url?: string | null;
+};
+
+function getInitials(nama: string) {
+  return nama
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join('')
+    .toUpperCase() || 'U';
+}
+
+function formatRole(role: string) {
+  return role
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+export default function OwnerLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
+
+  const [profile, setProfile] = useState<Profile | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadProfile() {
+      try {
+        const response = await fetch('/api/auth/me', {
+          method: 'GET',
+          cache: 'no-store',
+          credentials: 'same-origin',
+          signal: controller.signal,
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success || !result.data) {
+          throw new Error(result.error || 'Gagal mengambil profil.');
+        }
+
+        setProfile({
+          nama: result.data.nama || 'Pengguna',
+          role: result.data.role || 'owner',
+          avatar_url: result.data.avatar_url || null,
+        });
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error('Gagal memuat profil Owner:', error);
+        }
+      }
+    }
+
+    loadProfile();
+
+    return () => controller.abort();
+  }, [pathname]);
 
   const menuItems = [
     { name: 'Home Page', href: '/owner', icon: Home },
@@ -24,38 +91,73 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
     { name: 'Data Bahan Baku', href: '/owner/bahan-baku', icon: Boxes },
     { name: 'Resep', href: '/owner/resep', icon: BookOpen },
     { name: 'Data Supplier', href: '/owner/supplier', icon: Truck },
-    { name: 'Pemesanan Bahan Baku', href: '/owner/pemesanan-bahan-baku', icon: ShoppingBag },
+    {
+      name: 'Pemesanan Bahan Baku',
+      href: '/owner/pemesanan-bahan-baku',
+      icon: ShoppingBag,
+    },
     { name: 'Pesanan', href: '/owner/pesanan', icon: ClipboardList },
-    { name: 'Laporan', sub: 'Harian & Bulanan', href: '/owner/laporan', icon: FileText },
+    {
+      name: 'Laporan',
+      sub: 'Harian & Bulanan',
+      href: '/owner/laporan',
+      icon: FileText,
+    },
   ];
 
   return (
-    <div style={{ display: 'flex', height: '100vh', width: '100vw', backgroundColor: '#e59cae', fontFamily: 'system-ui, sans-serif', overflow: 'hidden' }}>
-      
-      {/* 1. SIDEBAR LEFT - Kunci Diam di Kiri */}
-      <aside 
-        style={{ 
-          width: '240px', 
-          backgroundColor: '#e59cae', 
-          padding: '20px 16px', 
-          display: 'flex', 
-          flexDirection: 'column', 
+    <div
+      style={{
+        display: 'flex',
+        height: '100vh',
+        width: '100vw',
+        backgroundColor: '#e59cae',
+        fontFamily: 'system-ui, sans-serif',
+        overflow: 'hidden',
+      }}
+    >
+      {/* SIDEBAR LEFT */}
+      <aside
+        style={{
+          width: '240px',
+          backgroundColor: '#e59cae',
+          padding: '20px 16px',
+          display: 'flex',
+          flexDirection: 'column',
           justifyContent: 'space-between',
           height: '100vh',
           flexShrink: 0,
-          boxSizing: 'border-box'
+          boxSizing: 'border-box',
         }}
       >
         <div>
-          <h2 style={{ color: '#ffffff', fontSize: '20px', fontWeight: 'bold', marginBottom: '24px', paddingLeft: '8px' }}>
+          <h2
+            style={{
+              color: '#ffffff',
+              fontSize: '20px',
+              fontWeight: 'bold',
+              marginBottom: '24px',
+              paddingLeft: '8px',
+            }}
+          >
             Menu Owner
           </h2>
 
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <nav
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+            }}
+          >
             {menuItems.map((item) => {
               const Icon = item.icon;
-              const isActive = pathname === item.href || (item.href !== '/owner' && pathname.startsWith(item.href));
-              
+
+              const isActive =
+                pathname === item.href ||
+                (item.href !== '/owner' &&
+                  pathname.startsWith(item.href));
+
               return (
                 <Link
                   key={item.name}
@@ -75,9 +177,20 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
                   }}
                 >
                   <Icon size={18} />
+
                   <div>
                     <div>{item.name}</div>
-                    {item.sub && <div style={{ fontSize: '9px', opacity: 0.8, marginTop: '-2px' }}>{item.sub}</div>}
+                    {item.sub && (
+                      <div
+                        style={{
+                          fontSize: '9px',
+                          opacity: 0.8,
+                          marginTop: '-2px',
+                        }}
+                      >
+                        {item.sub}
+                      </div>
+                    )}
                   </div>
                 </Link>
               );
@@ -86,37 +199,49 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* BOTTOM BUTTONS */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '20px' }}>
-          <Link 
-            href="/owner/profil" 
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '10px', 
-              padding: '10px 16px', 
-              borderRadius: '20px', 
-              backgroundColor: pathname === '/owner/profil' ? '#a02e59' : '#ffffff', 
-              color: pathname === '/owner/profil' ? '#ffffff' : '#a02e59', 
-              textDecoration: 'none', 
-              fontSize: '13px', 
-              fontWeight: 'bold' 
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+            marginTop: '20px',
+          }}
+        >
+          <Link
+            href="/owner/profil"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '10px 16px',
+              borderRadius: '20px',
+              backgroundColor:
+                pathname === '/owner/profil' ? '#a02e59' : '#ffffff',
+              color:
+                pathname === '/owner/profil' ? '#ffffff' : '#a02e59',
+              textDecoration: 'none',
+              fontSize: '13px',
+              fontWeight: 'bold',
             }}
           >
             <UserCheck size={16} /> Edit Profil
           </Link>
-          <Link 
-            href="/owner/logout" 
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '10px', 
-              padding: '10px 16px', 
-              borderRadius: '20px', 
-              backgroundColor: pathname === '/owner/logout' ? '#a02e59' : '#ffffff', 
-              color: pathname === '/owner/logout' ? '#ffffff' : '#a02e59', 
-              textDecoration: 'none', 
-              fontSize: '13px', 
-              fontWeight: 'bold' 
+
+          <Link
+            href="/owner/logout"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '10px 16px',
+              borderRadius: '20px',
+              backgroundColor:
+                pathname === '/owner/logout' ? '#a02e59' : '#ffffff',
+              color:
+                pathname === '/owner/logout' ? '#ffffff' : '#a02e59',
+              textDecoration: 'none',
+              fontSize: '13px',
+              fontWeight: 'bold',
             }}
           >
             <LogOut size={16} /> Log out
@@ -125,53 +250,124 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* AREA KANAN UTAMA */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-        
-        {/* 2. HEADER TOP (Judul "Home Page" & Profil) - Kunci Diam di Atas */}
-        <header 
-          style={{ 
-            backgroundColor: '#a02e59', 
-            height: '70px', 
-            padding: '0 32px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'space-between', 
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100vh',
+          overflow: 'hidden',
+          minWidth: 0,
+        }}
+      >
+        {/* HEADER */}
+        <header
+          style={{
+            backgroundColor: '#a02e59',
+            height: '70px',
+            padding: '0 32px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
             color: '#ffffff',
-            flexShrink: 0
+            flexShrink: 0,
           }}
         >
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Home Page</h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <h1
+            style={{
+              fontSize: '24px',
+              fontWeight: 'bold',
+              margin: 0,
+            }}
+          >
+            Home Page
+          </h1>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+            }}
+          >
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '13px', fontWeight: 'bold' }}>Aunur Rahman</div>
-              <div style={{ fontSize: '11px', opacity: 0.8 }}>Owner</div>
+              <div
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 'bold',
+                }}
+              >
+                {profile?.nama || 'Memuat profil...'}
+              </div>
+
+              <div
+                style={{
+                  fontSize: '11px',
+                  opacity: 0.8,
+                }}
+              >
+                {profile ? formatRole(profile.role) : 'Owner'}
+              </div>
             </div>
-            <div style={{ width: '38px', height: '38px', borderRadius: '50%', backgroundColor: '#ffffff', color: '#a02e59', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px' }}>
-              AR
+
+            <div
+              style={{
+                width: '38px',
+                height: '38px',
+                borderRadius: '50%',
+                backgroundColor: '#ffffff',
+                color: '#a02e59',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '14px',
+                overflow: 'hidden',
+                flexShrink: 0,
+              }}
+            >
+              {profile?.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt="Avatar Owner"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              ) : (
+                getInitials(profile?.nama || 'Owner')
+              )}
             </div>
           </div>
         </header>
 
-        {/* 3. AREA ISIAN KONTEN (Hanya Bagian Ini Yang Bergulir / Scrollable) */}
-        <main 
-          style={{ 
-            flex: 1, 
-            padding: '24px 32px', 
-            overflowY: 'auto', 
-            display: 'flex', 
+        {/* MAIN CONTENT */}
+        <main
+          style={{
+            flex: 1,
+            padding: '24px 32px',
+            overflowY: 'auto',
+            display: 'flex',
             flexDirection: 'column',
-            gap: '16px'
+            gap: '16px',
           }}
         >
           {children}
 
-          <footer style={{ padding: '12px 0', fontSize: '11px', color: '#702643', marginTop: 'auto' }}>
+          <footer
+            style={{
+              padding: '12px 0',
+              fontSize: '11px',
+              color: '#702643',
+              marginTop: 'auto',
+            }}
+          >
             Akses Owner · Lihat detail dan beri persetujuan
           </footer>
         </main>
-
       </div>
-
     </div>
   );
 }

@@ -1,0 +1,8 @@
+import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth";
+import { fail, ok } from "@/lib/http";
+import { hashPassword } from "@/lib/password";
+type Ctx={params:Promise<{id:string}>};
+export async function GET(_:Request,{params}:Ctx){const a=await requireRole(["admin","owner"]);if(a.response)return a.response;const {id}=await params;const row=await prisma.akun_pengguna.findUnique({where:{id},select:{id:true,nama:true,email:true,role:true,avatar_url:true,aktif:true,akses_terakhir:true}});return row?ok(row):fail("Pengguna tidak ditemukan.",404);}
+export async function PATCH(req:Request,{params}:Ctx){const a=await requireRole();if(a.response)return a.response;const {id}=await params;if(a.session!.role!=="admin" && a.session!.id!==id)return fail("Forbidden",403);const b=await req.json();try{const data:any={};const allowed=a.session!.role==="admin"?["nama","email","role","ref_id","avatar_url","aktif"]:["nama","email","avatar_url"];for(const k of allowed)if(b[k]!==undefined)data[k]=b[k];if(b.password)data.password_hash=hashPassword(b.password);const row=await prisma.akun_pengguna.update({where:{id},data});return ok({id:row.id,nama:row.nama,email:row.email,role:row.role});}catch{return fail("Pengguna tidak ditemukan atau email sudah digunakan.",404);}}
+export async function DELETE(_:Request,{params}:Ctx){const a=await requireRole(["admin"]);if(a.response)return a.response;const {id}=await params;if(a.session?.id===id)return fail("Akun yang sedang digunakan tidak dapat dihapus.",400);try{await prisma.akun_pengguna.delete({where:{id}});return ok({id});}catch{return fail("Pengguna tidak ditemukan.",404);}}

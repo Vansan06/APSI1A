@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Package, 
   CheckCircle2, 
@@ -78,6 +78,13 @@ export default function AdminHasilProduksiPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterTanggal, setFilterTanggal] = useState('24 Okt 2026');
   const [filterHasil, setFilterHasil] = useState('Semua hasil');
+  const [batchRows, setBatchRows] = useState<HasilProduksiItem[]>(HASIL_PRODUKSI_LIST);
+  useEffect(() => {
+    fetch("/api/hasil-produksi").then(r=>r.json()).then(r=>{
+      if(r.success) setBatchRows(r.data.map((b:any)=>({id:b.id,produk:b.produk?.nama_produk||"-",waktu:new Date(b.tanggal).toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"}),target:`${b.jumlah_target} pcs`,hasil:`${b.jumlah_berhasil+b.jumlah_ditolak} pcs`,lolos:`${b.jumlah_berhasil} pcs`,ditolak:`${b.jumlah_ditolak} pcs`,pemeriksa:"Karyawan Produksi",status:"Selesai",image:"/donat-cokelat.png"})));
+    }).catch(console.error);
+  }, []);
+
 
   const getStatusBadge = (status: string) => {
     if (status === 'Selesai') {
@@ -210,7 +217,7 @@ export default function AdminHasilProduksiPage() {
             </tr>
           </thead>
           <tbody>
-            {HASIL_PRODUKSI_LIST.map((item) => {
+            {batchRows.map((item) => {
               const badge = getStatusBadge(item.status);
               return (
                 <tr key={item.id} style={{ borderBottom: '1px solid #fdf2f8' }}>

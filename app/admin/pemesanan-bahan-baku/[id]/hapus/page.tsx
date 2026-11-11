@@ -10,7 +10,9 @@ export default function HapusPemesananBahanBakuAdminPage() {
   const router = useRouter();
   const id = (params?.id as string) || 'PO-261024-01';
 
-  const handleConfirmHapus = () => {
+  const handleConfirmHapus = async () => {
+    const response=await fetch(`/api/pemesanan-bahan-baku/${encodeURIComponent(id)}`,{method:"DELETE"});
+    if(!response.ok){const result=await response.json();alert(result.error||"Gagal menghapus data.");return;}
     router.push('/admin/pemesanan-bahan-baku?notify=hapus');
   };
 

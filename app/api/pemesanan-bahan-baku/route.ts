@@ -1,11 +1,3 @@
-import {
-  GET as getOrders,
-  POST as createOrder,
-  PUT as updateOrder,
-  PATCH as acceptOrder,
-} from '../../../api/pemesanan-bahan-baku/route';
-
-export const GET = getOrders;
-export const POST = createOrder;
-export const PUT = updateOrder;
-export const PATCH = acceptOrder;
+import{prisma}from"@/lib/prisma";import{requireRole}from"@/lib/auth";import{ok,fail}from"@/lib/http";import{newId,dayStart}from"@/lib/ids";
+export async function GET(){const a=await requireRole();if(a.response)return a.response;const where:any={};if(a.session!.role==="supplier"){const u=await prisma.akun_pengguna.findUnique({where:{id:a.session!.id},select:{ref_id:true}});if(!u?.ref_id)return fail("Akun supplier belum ditautkan ke data supplier.",403);where.id_supplier=u.ref_id;}return ok(await prisma.pesanan_bahan_baku.findMany({where,include:{supplier:true,detail_pesanan_bahan_baku:{include:{bahan_baku:true}}},orderBy:{tanggal_pesanan:"desc"}}));}
+export async function POST(r:Request){const a=await requireRole(["admin"]);if(a.response)return a.response;const b=await r.json();if(!b.id_supplier||!Array.isArray(b.items)||!b.items.length)return fail("Supplier dan minimal satu item wajib diisi.");try{const id=newId("PO");const total=b.items.reduce((s:any,i:any)=>s+Number(i.jumlah)*Number(i.harga_satuan),0);const row=await prisma.pesanan_bahan_baku.create({data:{id_pengadaan:id,status:"Menunggu Supplier",tanggal_pesanan:dayStart(b.tanggal),id_supplier:b.id_supplier,jumlah_pesanan:b.items.length,total_biaya:total,detail_pesanan_bahan_baku:{create:b.items.map((i:any)=>({id_bahan_baku:i.id_bahan_baku,jumlah:i.jumlah,harga_satuan:i.harga_satuan}))}},include:{detail_pesanan_bahan_baku:true}});return ok(row,201);}catch(e){console.error(e);return fail("Gagal membuat PO. Periksa supplier dan bahan baku.",400);}}

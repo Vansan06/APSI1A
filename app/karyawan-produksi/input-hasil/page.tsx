@@ -86,8 +86,13 @@ export default function InputHasilProduksiPage() {
   const valDitolak = parseInt(ditolak) || 0;
   const isJumlahSesuai = valLolos + valDitolak === valTotal;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const products=await fetch("/api/produk").then(r=>r.json());
+    const selected=products.data?.find((x:any)=>x.nama_produk===produkNama);
+    if(!selected){alert("Produk tidak ditemukan.");return;}
+    const response=await fetch("/api/hasil-produksi",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id_produk:selected.id_produk,tanggal:new Date().toISOString().slice(0,10),jumlah_target:Number(jumlahTotal),jumlah_berhasil:Number(lolosMutu),jumlah_ditolak:Number(ditolak),catatan_mutu:Number(ditolak)>0?`${ditolak} unit ditolak pada pemeriksaan mutu.`:null})});
+    if(!response.ok){const result=await response.json();alert(result.error||"Gagal menyimpan hasil produksi.");return;}
     setIsSaved(true);
   };
 

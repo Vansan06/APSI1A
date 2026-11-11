@@ -75,6 +75,13 @@ export const BAHAN_BAKU_LIST: BahanBakuItem[] = [
 export default function AdminDataBahanBakuPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [bahanRows, setBahanRows] = useState<BahanBakuItem[]>(BAHAN_BAKU_LIST);
+  useEffect(() => {
+    fetch("/api/bahan-baku").then(r=>r.json()).then(r=>{
+      if(r.success) setBahanRows(r.data.map((b:any)=>({id:b.id_bahan_baku,nama:b.nama_bahan||"-",supplier:"-",stok:`${Number(b.stok_tersedia||0)} kg`,minimum:`${Number(b.stok_minimal||0)} kg`,hargaSatuan:`Rp${Number(b.harga_satuan||0).toLocaleString("id-ID")}`,kondisi:Number(b.stok_tersedia||0)<=Number(b.stok_minimal||0)?"Stok rendah":"Aman"})));
+    }).catch(console.error);
+  }, []);
+
 
   const notifyType = searchParams.get('notify');
   const [showModal, setShowModal] = useState(false);
@@ -197,7 +204,7 @@ export default function AdminDataBahanBakuPage() {
             </tr>
           </thead>
           <tbody>
-            {BAHAN_BAKU_LIST.map((item) => (
+            {bahanRows.map((item) => (
               <tr key={item.id} style={{ borderBottom: '1px solid #fdf2f8' }}>
                 <td style={{ padding: '12px' }}>
                   <div style={{ fontWeight: 'bold', color: '#333' }}>{item.nama}</div>

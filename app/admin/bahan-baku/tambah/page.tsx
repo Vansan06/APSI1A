@@ -17,8 +17,12 @@ export default function AdminTambahBahanBakuPage() {
   const [hargaSatuan, setHargaSatuan] = useState('');
   const [statusPersediaan, setStatusPersediaan] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const supplierRows = await fetch("/api/supplier").then(r=>r.json());
+    const selectedSupplier = supplierRows.data?.find((x:any)=>x.nama_supplier===supplier);
+    const response = await fetch("/api/bahan-baku", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id_bahan_baku:kodeBahan,nama_bahan:namaBahan,stok_tersedia:Number(stokAwal),stok_minimal:Number(stokMinimum),harga_satuan:Number(hargaSatuan.replace(/[^0-9]/g,"")),id_supplier:selectedSupplier?.id_supplier})});
+    if(!response.ok){const result=await response.json();alert(result.error||"Gagal menyimpan bahan baku.");return;}
     router.push('/admin/bahan-baku?notify=simpan');
   };
 

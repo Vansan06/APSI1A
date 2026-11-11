@@ -19,8 +19,13 @@ export default function AdminTambahPesananPage() {
   const [metodePembayaran, setMetodePembayaran] = useState('');
   const [catatan, setCatatan] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const products = await fetch("/api/produk").then(r=>r.json());
+    const selected = products.data?.find((x:any)=>x.nama_produk===produk);
+    if(!selected){alert("Produk tidak ditemukan. Tambahkan produk terlebih dahulu.");return;}
+    const response = await fetch("/api/pesanan",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nama_pelanggan:namaPelanggan,tanggal:tglPesanan,jenis_pesanan:"MTO",items:[{id_produk:selected.id_produk,jumlah:Number(kuantitas),harga_satuan:Number(selected.harga_jual||0)}]})});
+    if(!response.ok){const result=await response.json();alert(result.error||"Gagal menyimpan pesanan.");return;}
     router.push('/admin/pesanan?notify=simpan');
   };
 

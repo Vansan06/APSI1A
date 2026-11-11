@@ -10,7 +10,9 @@ export default function HapusPesananAdminPage() {
   const router = useRouter();
   const id = (params?.id as string) || 'PSN-261024-01';
 
-  const handleConfirmHapus = () => {
+  const handleConfirmHapus = async () => {
+    const response=await fetch(`/api/pesanan/${encodeURIComponent(id)}`,{method:"DELETE"});
+    if(!response.ok){const result=await response.json();alert(result.error||"Gagal menghapus data.");return;}
     router.push('/admin/pesanan?notify=hapus');
   };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Factory, 
   ClipboardList, 
@@ -74,11 +74,14 @@ export default function AdminKapasitasProduksiPage() {
   // State Form Atur Kapasitas
   const [kapasitasHarian, setKapasitasHarian] = useState('800');
   const [jamOperasional, setJamOperasional] = useState('08.00–16.00');
+  const [capacityInfo, setCapacityInfo] = useState({ kapasitas_total:800, kapasitas_terpakai:620, sisa:180 });
+  useEffect(() => { fetch("/api/kapasitas").then(r=>r.json()).then(r=>{if(r.success){setCapacityInfo(r.data);setKapasitasHarian(String(r.data.kapasitas_total));setJamOperasional(r.data.jam_operasional||"08.00–16.00")}}).catch(console.error); }, []);
 
   const handleSimpanKapasitas = (e: React.FormEvent) => {
     e.preventDefault();
-    setShowModalAtur(false);
-    setShowModalSuccess(true);
+    fetch("/api/kapasitas", { method:"PATCH", headers:{"Content-Type":"application/json"}, body:JSON.stringify({kapasitas_total:Number(kapasitasHarian),jam_operasional:jamOperasional}) })
+      .then(async r=>{const result=await r.json();if(!r.ok)throw new Error(result.error||"Gagal menyimpan kapasitas");setCapacityInfo(result.data);setShowModalAtur(false);setShowModalSuccess(true);})
+      .catch(err=>alert(err.message));
   };
 
   const getStatusBadge = (status: string) => {
@@ -129,7 +132,7 @@ export default function AdminKapasitasProduksiPage() {
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: '11px', color: '#777777' }}>Kapasitas harian</div>
             <div style={{ fontSize: '26px', fontWeight: 'bold', color: '#333333', margin: '4px 0' }}>
-              800 unit
+              {capacityInfo.kapasitas_total.toLocaleString('id-ID')} unit
             </div>
             <div style={{ fontSize: '11px', color: '#888888' }}>1 sif &bull; 08.00–16.00</div>
           </div>
@@ -143,7 +146,7 @@ export default function AdminKapasitasProduksiPage() {
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: '11px', color: '#777777' }}>Rencana hari ini</div>
             <div style={{ fontSize: '26px', fontWeight: 'bold', color: '#333333', margin: '4px 0' }}>
-              620 unit
+              {capacityInfo.kapasitas_terpakai.toLocaleString('id-ID')} unit
             </div>
             <div style={{ fontSize: '11px', color: '#888888' }}>520 pesanan + 100 stok</div>
           </div>
@@ -157,7 +160,7 @@ export default function AdminKapasitasProduksiPage() {
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: '11px', color: '#777777' }}>Sisa kapasitas</div>
             <div style={{ fontSize: '26px', fontWeight: 'bold', color: '#333333', margin: '4px 0' }}>
-              180 unit
+              {capacityInfo.sisa.toLocaleString('id-ID')} unit
             </div>
             <div style={{ fontSize: '11px', color: '#888888' }}>22,5% tersedia untuk pesanan baru</div>
           </div>

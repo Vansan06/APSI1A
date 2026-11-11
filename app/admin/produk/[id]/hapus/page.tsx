@@ -71,7 +71,9 @@ export default function HapusProdukAdminPage() {
 
   const data = HAPUS_PRODUK_MAP[id] || HAPUS_PRODUK_MAP['PRD-001'];
 
-  const handleConfirmHapus = () => {
+  const handleConfirmHapus = async () => {
+    const response=await fetch(`/api/produk/${encodeURIComponent(id)}`,{method:"DELETE"});
+    if(!response.ok){const result=await response.json();alert(result.error||"Gagal menghapus data.");return;}
     router.push('/admin/produk?notify=hapus');
   };
 

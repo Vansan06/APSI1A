@@ -76,8 +76,10 @@ export default function EditPemesananBahanBakuAdminPage() {
     setEstimasiTiba(data.estimasiTiba);
   }, [id]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const response=await fetch(`/api/pemesanan-bahan-baku/${encodeURIComponent(id)}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({status})});
+    if(!response.ok){const result=await response.json();alert(result.error||"Gagal menyimpan perubahan.");return;}
     router.push('/admin/pemesanan-bahan-baku?notify=edit');
   };
 

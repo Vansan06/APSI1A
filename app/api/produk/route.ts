@@ -1,0 +1,3 @@
+import { prisma } from "@/lib/prisma"; import { requireRole } from "@/lib/auth"; import { ok,fail } from "@/lib/http"; import { newId } from "@/lib/ids";
+export async function GET(){const a=await requireRole();if(a.response)return a.response;return ok(await prisma.produk.findMany({include:{detail_pesanan_produk:true},orderBy:{nama_produk:"asc"}}));}
+export async function POST(r:Request){const a=await requireRole(["admin"]);if(a.response)return a.response;const b=await r.json();if(!b.nama_produk)return fail("Nama produk wajib diisi.");const row=await prisma.produk.create({data:{id_produk:b.id_produk||newId("PRD"),nama_produk:b.nama_produk,harga_jual:b.harga_jual??0,jumlah_target:b.jumlah_target??0,jumlah_berhasil:b.jumlah_berhasil??0}});return ok(row,201);}

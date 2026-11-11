@@ -112,8 +112,10 @@ export default function EditPesananAdminPage() {
     setCatatan(data.catatan);
   }, [id]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const response=await fetch(`/api/pesanan/${encodeURIComponent(id)}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({nama_pelanggan:pelanggan,status:statusPesanan})});
+    if(!response.ok){const result=await response.json();alert(result.error||"Gagal menyimpan perubahan.");return;}
     router.push('/admin/pesanan?notify=edit');
   };
 

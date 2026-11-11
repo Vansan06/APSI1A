@@ -17,8 +17,15 @@ export default function AdminBuatPemesananBahanBakuPage() {
   const [estimasiTiba, setEstimasiTiba] = useState('');
   const [catatan, setCatatan] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const [suppliers,bahan] = await Promise.all([fetch("/api/supplier").then(r=>r.json()),fetch("/api/bahan-baku").then(r=>r.json())]);
+    const selectedSupplier = suppliers.data?.find((x:any)=>x.nama_supplier===supplier);
+    const selectedBahan = bahan.data?.find((x:any)=>x.nama_bahan?.toLowerCase()===bahanBaku.toLowerCase());
+    if(!selectedSupplier||!selectedBahan){alert("Supplier atau bahan baku tidak ditemukan.");return;}
+    const qty=Number(jumlah), total=Number(totalBiaya.replace(/[^0-9]/g,""));
+    const response=await fetch("/api/pemesanan-bahan-baku",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id_supplier:selectedSupplier.id_supplier,items:[{id_bahan_baku:selectedBahan.id_bahan_baku,jumlah:qty,harga_satuan:qty?total/qty:0}]})});
+    if(!response.ok){const result=await response.json();alert(result.error||"Gagal membuat PO.");return;}
     router.push('/admin/pemesanan-bahan-baku?notify=simpan');
   };
 

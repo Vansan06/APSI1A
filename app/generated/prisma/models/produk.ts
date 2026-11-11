@@ -43,6 +43,7 @@ export type ProdukMinAggregateOutputType = {
   jumlah_target: number | null
   jumlah_berhasil: number | null
   nama_produk: string | null
+  gambar_url: string | null
   harga_jual: runtime.Decimal | null
   id_admin: string | null
   id_owner: string | null
@@ -55,6 +56,7 @@ export type ProdukMaxAggregateOutputType = {
   jumlah_target: number | null
   jumlah_berhasil: number | null
   nama_produk: string | null
+  gambar_url: string | null
   harga_jual: runtime.Decimal | null
   id_admin: string | null
   id_owner: string | null
@@ -67,6 +69,7 @@ export type ProdukCountAggregateOutputType = {
   jumlah_target: number
   jumlah_berhasil: number
   nama_produk: number
+  gambar_url: number
   harga_jual: number
   id_admin: number
   id_owner: number
@@ -93,6 +96,7 @@ export type ProdukMinAggregateInputType = {
   jumlah_target?: true
   jumlah_berhasil?: true
   nama_produk?: true
+  gambar_url?: true
   harga_jual?: true
   id_admin?: true
   id_owner?: true
@@ -105,6 +109,7 @@ export type ProdukMaxAggregateInputType = {
   jumlah_target?: true
   jumlah_berhasil?: true
   nama_produk?: true
+  gambar_url?: true
   harga_jual?: true
   id_admin?: true
   id_owner?: true
@@ -117,6 +122,7 @@ export type ProdukCountAggregateInputType = {
   jumlah_target?: true
   jumlah_berhasil?: true
   nama_produk?: true
+  gambar_url?: true
   harga_jual?: true
   id_admin?: true
   id_owner?: true
@@ -216,6 +222,7 @@ export type ProdukGroupByOutputType = {
   jumlah_target: number | null
   jumlah_berhasil: number | null
   nama_produk: string | null
+  gambar_url: string | null
   harga_jual: runtime.Decimal | null
   id_admin: string | null
   id_owner: string | null
@@ -251,6 +258,7 @@ export type produkWhereInput = {
   jumlah_target?: Prisma.IntNullableFilter<"produk"> | number | null
   jumlah_berhasil?: Prisma.IntNullableFilter<"produk"> | number | null
   nama_produk?: Prisma.StringNullableFilter<"produk"> | string | null
+  gambar_url?: Prisma.StringNullableFilter<"produk"> | string | null
   harga_jual?: Prisma.DecimalNullableFilter<"produk"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.StringNullableFilter<"produk"> | string | null
   id_owner?: Prisma.StringNullableFilter<"produk"> | string | null
@@ -265,6 +273,7 @@ export type produkWhereInput = {
   owner?: Prisma.XOR<Prisma.OwnerNullableScalarRelationFilter, Prisma.ownerWhereInput> | null
   pesanan_produk?: Prisma.XOR<Prisma.Pesanan_produkNullableScalarRelationFilter, Prisma.pesanan_produkWhereInput> | null
   resep_standar?: Prisma.Resep_standarListRelationFilter
+  hasil_produksi?: Prisma.Hasil_produksiListRelationFilter
 }
 
 export type produkOrderByWithRelationInput = {
@@ -272,6 +281,7 @@ export type produkOrderByWithRelationInput = {
   jumlah_target?: Prisma.SortOrderInput | Prisma.SortOrder
   jumlah_berhasil?: Prisma.SortOrderInput | Prisma.SortOrder
   nama_produk?: Prisma.SortOrderInput | Prisma.SortOrder
+  gambar_url?: Prisma.SortOrderInput | Prisma.SortOrder
   harga_jual?: Prisma.SortOrderInput | Prisma.SortOrder
   id_admin?: Prisma.SortOrderInput | Prisma.SortOrder
   id_owner?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -286,6 +296,7 @@ export type produkOrderByWithRelationInput = {
   owner?: Prisma.ownerOrderByWithRelationInput
   pesanan_produk?: Prisma.pesanan_produkOrderByWithRelationInput
   resep_standar?: Prisma.resep_standarOrderByRelationAggregateInput
+  hasil_produksi?: Prisma.hasil_produksiOrderByRelationAggregateInput
 }
 
 export type produkWhereUniqueInput = Prisma.AtLeast<{
@@ -296,6 +307,7 @@ export type produkWhereUniqueInput = Prisma.AtLeast<{
   jumlah_target?: Prisma.IntNullableFilter<"produk"> | number | null
   jumlah_berhasil?: Prisma.IntNullableFilter<"produk"> | number | null
   nama_produk?: Prisma.StringNullableFilter<"produk"> | string | null
+  gambar_url?: Prisma.StringNullableFilter<"produk"> | string | null
   harga_jual?: Prisma.DecimalNullableFilter<"produk"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.StringNullableFilter<"produk"> | string | null
   id_owner?: Prisma.StringNullableFilter<"produk"> | string | null
@@ -310,6 +322,7 @@ export type produkWhereUniqueInput = Prisma.AtLeast<{
   owner?: Prisma.XOR<Prisma.OwnerNullableScalarRelationFilter, Prisma.ownerWhereInput> | null
   pesanan_produk?: Prisma.XOR<Prisma.Pesanan_produkNullableScalarRelationFilter, Prisma.pesanan_produkWhereInput> | null
   resep_standar?: Prisma.Resep_standarListRelationFilter
+  hasil_produksi?: Prisma.Hasil_produksiListRelationFilter
 }, "id_produk">
 
 export type produkOrderByWithAggregationInput = {
@@ -317,6 +330,7 @@ export type produkOrderByWithAggregationInput = {
   jumlah_target?: Prisma.SortOrderInput | Prisma.SortOrder
   jumlah_berhasil?: Prisma.SortOrderInput | Prisma.SortOrder
   nama_produk?: Prisma.SortOrderInput | Prisma.SortOrder
+  gambar_url?: Prisma.SortOrderInput | Prisma.SortOrder
   harga_jual?: Prisma.SortOrderInput | Prisma.SortOrder
   id_admin?: Prisma.SortOrderInput | Prisma.SortOrder
   id_owner?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -337,6 +351,7 @@ export type produkScalarWhereWithAggregatesInput = {
   jumlah_target?: Prisma.IntNullableWithAggregatesFilter<"produk"> | number | null
   jumlah_berhasil?: Prisma.IntNullableWithAggregatesFilter<"produk"> | number | null
   nama_produk?: Prisma.StringNullableWithAggregatesFilter<"produk"> | string | null
+  gambar_url?: Prisma.StringNullableWithAggregatesFilter<"produk"> | string | null
   harga_jual?: Prisma.DecimalNullableWithAggregatesFilter<"produk"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.StringNullableWithAggregatesFilter<"produk"> | string | null
   id_owner?: Prisma.StringNullableWithAggregatesFilter<"produk"> | string | null
@@ -349,6 +364,7 @@ export type produkCreateInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuCreateNestedManyWithoutProdukInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkCreateNestedManyWithoutProdukInput
@@ -359,6 +375,7 @@ export type produkCreateInput = {
   owner?: Prisma.ownerCreateNestedOneWithoutProdukInput
   pesanan_produk?: Prisma.pesanan_produkCreateNestedOneWithoutProdukInput
   resep_standar?: Prisma.resep_standarCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiCreateNestedManyWithoutProdukInput
 }
 
 export type produkUncheckedCreateInput = {
@@ -366,6 +383,7 @@ export type produkUncheckedCreateInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: string | null
   id_owner?: string | null
@@ -376,6 +394,7 @@ export type produkUncheckedCreateInput = {
   laporan?: Prisma.laporanUncheckedCreateNestedManyWithoutProdukInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedCreateNestedManyWithoutProdukInput
   resep_standar?: Prisma.resep_standarUncheckedCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedCreateNestedManyWithoutProdukInput
 }
 
 export type produkUpdateInput = {
@@ -383,6 +402,7 @@ export type produkUpdateInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuUpdateManyWithoutProdukNestedInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUpdateManyWithoutProdukNestedInput
@@ -393,6 +413,7 @@ export type produkUpdateInput = {
   owner?: Prisma.ownerUpdateOneWithoutProdukNestedInput
   pesanan_produk?: Prisma.pesanan_produkUpdateOneWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateInput = {
@@ -400,6 +421,7 @@ export type produkUncheckedUpdateInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -410,6 +432,7 @@ export type produkUncheckedUpdateInput = {
   laporan?: Prisma.laporanUncheckedUpdateManyWithoutProdukNestedInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedUpdateManyWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUncheckedUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedUpdateManyWithoutProdukNestedInput
 }
 
 export type produkCreateManyInput = {
@@ -417,6 +440,7 @@ export type produkCreateManyInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: string | null
   id_owner?: string | null
@@ -429,6 +453,7 @@ export type produkUpdateManyMutationInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
@@ -437,6 +462,7 @@ export type produkUncheckedUpdateManyInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -464,6 +490,7 @@ export type produkCountOrderByAggregateInput = {
   jumlah_target?: Prisma.SortOrder
   jumlah_berhasil?: Prisma.SortOrder
   nama_produk?: Prisma.SortOrder
+  gambar_url?: Prisma.SortOrder
   harga_jual?: Prisma.SortOrder
   id_admin?: Prisma.SortOrder
   id_owner?: Prisma.SortOrder
@@ -482,6 +509,7 @@ export type produkMaxOrderByAggregateInput = {
   jumlah_target?: Prisma.SortOrder
   jumlah_berhasil?: Prisma.SortOrder
   nama_produk?: Prisma.SortOrder
+  gambar_url?: Prisma.SortOrder
   harga_jual?: Prisma.SortOrder
   id_admin?: Prisma.SortOrder
   id_owner?: Prisma.SortOrder
@@ -494,6 +522,7 @@ export type produkMinOrderByAggregateInput = {
   jumlah_target?: Prisma.SortOrder
   jumlah_berhasil?: Prisma.SortOrder
   nama_produk?: Prisma.SortOrder
+  gambar_url?: Prisma.SortOrder
   harga_jual?: Prisma.SortOrder
   id_admin?: Prisma.SortOrder
   id_owner?: Prisma.SortOrder
@@ -764,11 +793,26 @@ export type produkUpdateOneRequiredWithoutPenugasan_karyawan_produkNestedInput =
   update?: Prisma.XOR<Prisma.XOR<Prisma.produkUpdateToOneWithWhereWithoutPenugasan_karyawan_produkInput, Prisma.produkUpdateWithoutPenugasan_karyawan_produkInput>, Prisma.produkUncheckedUpdateWithoutPenugasan_karyawan_produkInput>
 }
 
+export type produkCreateNestedOneWithoutHasil_produksiInput = {
+  create?: Prisma.XOR<Prisma.produkCreateWithoutHasil_produksiInput, Prisma.produkUncheckedCreateWithoutHasil_produksiInput>
+  connectOrCreate?: Prisma.produkCreateOrConnectWithoutHasil_produksiInput
+  connect?: Prisma.produkWhereUniqueInput
+}
+
+export type produkUpdateOneRequiredWithoutHasil_produksiNestedInput = {
+  create?: Prisma.XOR<Prisma.produkCreateWithoutHasil_produksiInput, Prisma.produkUncheckedCreateWithoutHasil_produksiInput>
+  connectOrCreate?: Prisma.produkCreateOrConnectWithoutHasil_produksiInput
+  upsert?: Prisma.produkUpsertWithoutHasil_produksiInput
+  connect?: Prisma.produkWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.produkUpdateToOneWithWhereWithoutHasil_produksiInput, Prisma.produkUpdateWithoutHasil_produksiInput>, Prisma.produkUncheckedUpdateWithoutHasil_produksiInput>
+}
+
 export type produkCreateWithoutAdminInput = {
   id_produk: string
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuCreateNestedManyWithoutProdukInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkCreateNestedManyWithoutProdukInput
@@ -778,6 +822,7 @@ export type produkCreateWithoutAdminInput = {
   owner?: Prisma.ownerCreateNestedOneWithoutProdukInput
   pesanan_produk?: Prisma.pesanan_produkCreateNestedOneWithoutProdukInput
   resep_standar?: Prisma.resep_standarCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiCreateNestedManyWithoutProdukInput
 }
 
 export type produkUncheckedCreateWithoutAdminInput = {
@@ -785,6 +830,7 @@ export type produkUncheckedCreateWithoutAdminInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_owner?: string | null
   id_pesanan?: string | null
@@ -794,6 +840,7 @@ export type produkUncheckedCreateWithoutAdminInput = {
   laporan?: Prisma.laporanUncheckedCreateNestedManyWithoutProdukInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedCreateNestedManyWithoutProdukInput
   resep_standar?: Prisma.resep_standarUncheckedCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedCreateNestedManyWithoutProdukInput
 }
 
 export type produkCreateOrConnectWithoutAdminInput = {
@@ -830,6 +877,7 @@ export type produkScalarWhereInput = {
   jumlah_target?: Prisma.IntNullableFilter<"produk"> | number | null
   jumlah_berhasil?: Prisma.IntNullableFilter<"produk"> | number | null
   nama_produk?: Prisma.StringNullableFilter<"produk"> | string | null
+  gambar_url?: Prisma.StringNullableFilter<"produk"> | string | null
   harga_jual?: Prisma.DecimalNullableFilter<"produk"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.StringNullableFilter<"produk"> | string | null
   id_owner?: Prisma.StringNullableFilter<"produk"> | string | null
@@ -842,6 +890,7 @@ export type produkCreateWithoutBahan_bakuInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   detail_pesanan_produk?: Prisma.detail_pesanan_produkCreateNestedManyWithoutProdukInput
   laporan?: Prisma.laporanCreateNestedManyWithoutProdukInput
@@ -851,6 +900,7 @@ export type produkCreateWithoutBahan_bakuInput = {
   owner?: Prisma.ownerCreateNestedOneWithoutProdukInput
   pesanan_produk?: Prisma.pesanan_produkCreateNestedOneWithoutProdukInput
   resep_standar?: Prisma.resep_standarCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiCreateNestedManyWithoutProdukInput
 }
 
 export type produkUncheckedCreateWithoutBahan_bakuInput = {
@@ -858,6 +908,7 @@ export type produkUncheckedCreateWithoutBahan_bakuInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: string | null
   id_owner?: string | null
@@ -867,6 +918,7 @@ export type produkUncheckedCreateWithoutBahan_bakuInput = {
   laporan?: Prisma.laporanUncheckedCreateNestedManyWithoutProdukInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedCreateNestedManyWithoutProdukInput
   resep_standar?: Prisma.resep_standarUncheckedCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedCreateNestedManyWithoutProdukInput
 }
 
 export type produkCreateOrConnectWithoutBahan_bakuInput = {
@@ -890,6 +942,7 @@ export type produkUpdateWithoutBahan_bakuInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUpdateManyWithoutProdukNestedInput
   laporan?: Prisma.laporanUpdateManyWithoutProdukNestedInput
@@ -899,6 +952,7 @@ export type produkUpdateWithoutBahan_bakuInput = {
   owner?: Prisma.ownerUpdateOneWithoutProdukNestedInput
   pesanan_produk?: Prisma.pesanan_produkUpdateOneWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateWithoutBahan_bakuInput = {
@@ -906,6 +960,7 @@ export type produkUncheckedUpdateWithoutBahan_bakuInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -915,6 +970,7 @@ export type produkUncheckedUpdateWithoutBahan_bakuInput = {
   laporan?: Prisma.laporanUncheckedUpdateManyWithoutProdukNestedInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedUpdateManyWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUncheckedUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedUpdateManyWithoutProdukNestedInput
 }
 
 export type produkCreateWithoutKaryawan_produksiInput = {
@@ -922,6 +978,7 @@ export type produkCreateWithoutKaryawan_produksiInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuCreateNestedManyWithoutProdukInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkCreateNestedManyWithoutProdukInput
@@ -931,6 +988,7 @@ export type produkCreateWithoutKaryawan_produksiInput = {
   owner?: Prisma.ownerCreateNestedOneWithoutProdukInput
   pesanan_produk?: Prisma.pesanan_produkCreateNestedOneWithoutProdukInput
   resep_standar?: Prisma.resep_standarCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiCreateNestedManyWithoutProdukInput
 }
 
 export type produkUncheckedCreateWithoutKaryawan_produksiInput = {
@@ -938,6 +996,7 @@ export type produkUncheckedCreateWithoutKaryawan_produksiInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: string | null
   id_owner?: string | null
@@ -947,6 +1006,7 @@ export type produkUncheckedCreateWithoutKaryawan_produksiInput = {
   laporan?: Prisma.laporanUncheckedCreateNestedManyWithoutProdukInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedCreateNestedManyWithoutProdukInput
   resep_standar?: Prisma.resep_standarUncheckedCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedCreateNestedManyWithoutProdukInput
 }
 
 export type produkCreateOrConnectWithoutKaryawan_produksiInput = {
@@ -980,6 +1040,7 @@ export type produkCreateWithoutLaporanInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuCreateNestedManyWithoutProdukInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkCreateNestedManyWithoutProdukInput
@@ -989,6 +1050,7 @@ export type produkCreateWithoutLaporanInput = {
   owner?: Prisma.ownerCreateNestedOneWithoutProdukInput
   pesanan_produk?: Prisma.pesanan_produkCreateNestedOneWithoutProdukInput
   resep_standar?: Prisma.resep_standarCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiCreateNestedManyWithoutProdukInput
 }
 
 export type produkUncheckedCreateWithoutLaporanInput = {
@@ -996,6 +1058,7 @@ export type produkUncheckedCreateWithoutLaporanInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: string | null
   id_owner?: string | null
@@ -1005,6 +1068,7 @@ export type produkUncheckedCreateWithoutLaporanInput = {
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUncheckedCreateNestedManyWithoutProdukInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedCreateNestedManyWithoutProdukInput
   resep_standar?: Prisma.resep_standarUncheckedCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedCreateNestedManyWithoutProdukInput
 }
 
 export type produkCreateOrConnectWithoutLaporanInput = {
@@ -1028,6 +1092,7 @@ export type produkUpdateWithoutLaporanInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuUpdateManyWithoutProdukNestedInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUpdateManyWithoutProdukNestedInput
@@ -1037,6 +1102,7 @@ export type produkUpdateWithoutLaporanInput = {
   owner?: Prisma.ownerUpdateOneWithoutProdukNestedInput
   pesanan_produk?: Prisma.pesanan_produkUpdateOneWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateWithoutLaporanInput = {
@@ -1044,6 +1110,7 @@ export type produkUncheckedUpdateWithoutLaporanInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1053,6 +1120,7 @@ export type produkUncheckedUpdateWithoutLaporanInput = {
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUncheckedUpdateManyWithoutProdukNestedInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedUpdateManyWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUncheckedUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedUpdateManyWithoutProdukNestedInput
 }
 
 export type produkCreateWithoutOwnerInput = {
@@ -1060,6 +1128,7 @@ export type produkCreateWithoutOwnerInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuCreateNestedManyWithoutProdukInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkCreateNestedManyWithoutProdukInput
@@ -1069,6 +1138,7 @@ export type produkCreateWithoutOwnerInput = {
   karyawan_produksi?: Prisma.karyawan_produksiCreateNestedOneWithoutProdukInput
   pesanan_produk?: Prisma.pesanan_produkCreateNestedOneWithoutProdukInput
   resep_standar?: Prisma.resep_standarCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiCreateNestedManyWithoutProdukInput
 }
 
 export type produkUncheckedCreateWithoutOwnerInput = {
@@ -1076,6 +1146,7 @@ export type produkUncheckedCreateWithoutOwnerInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: string | null
   id_pesanan?: string | null
@@ -1085,6 +1156,7 @@ export type produkUncheckedCreateWithoutOwnerInput = {
   laporan?: Prisma.laporanUncheckedCreateNestedManyWithoutProdukInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedCreateNestedManyWithoutProdukInput
   resep_standar?: Prisma.resep_standarUncheckedCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedCreateNestedManyWithoutProdukInput
 }
 
 export type produkCreateOrConnectWithoutOwnerInput = {
@@ -1118,6 +1190,7 @@ export type produkCreateWithoutPesanan_produkInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuCreateNestedManyWithoutProdukInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkCreateNestedManyWithoutProdukInput
@@ -1127,6 +1200,7 @@ export type produkCreateWithoutPesanan_produkInput = {
   karyawan_produksi?: Prisma.karyawan_produksiCreateNestedOneWithoutProdukInput
   owner?: Prisma.ownerCreateNestedOneWithoutProdukInput
   resep_standar?: Prisma.resep_standarCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiCreateNestedManyWithoutProdukInput
 }
 
 export type produkUncheckedCreateWithoutPesanan_produkInput = {
@@ -1134,6 +1208,7 @@ export type produkUncheckedCreateWithoutPesanan_produkInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: string | null
   id_owner?: string | null
@@ -1143,6 +1218,7 @@ export type produkUncheckedCreateWithoutPesanan_produkInput = {
   laporan?: Prisma.laporanUncheckedCreateNestedManyWithoutProdukInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedCreateNestedManyWithoutProdukInput
   resep_standar?: Prisma.resep_standarUncheckedCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedCreateNestedManyWithoutProdukInput
 }
 
 export type produkCreateOrConnectWithoutPesanan_produkInput = {
@@ -1176,6 +1252,7 @@ export type produkCreateWithoutResep_standarInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuCreateNestedManyWithoutProdukInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkCreateNestedManyWithoutProdukInput
@@ -1185,6 +1262,7 @@ export type produkCreateWithoutResep_standarInput = {
   karyawan_produksi?: Prisma.karyawan_produksiCreateNestedOneWithoutProdukInput
   owner?: Prisma.ownerCreateNestedOneWithoutProdukInput
   pesanan_produk?: Prisma.pesanan_produkCreateNestedOneWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiCreateNestedManyWithoutProdukInput
 }
 
 export type produkUncheckedCreateWithoutResep_standarInput = {
@@ -1192,6 +1270,7 @@ export type produkUncheckedCreateWithoutResep_standarInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: string | null
   id_owner?: string | null
@@ -1201,6 +1280,7 @@ export type produkUncheckedCreateWithoutResep_standarInput = {
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUncheckedCreateNestedManyWithoutProdukInput
   laporan?: Prisma.laporanUncheckedCreateNestedManyWithoutProdukInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedCreateNestedManyWithoutProdukInput
 }
 
 export type produkCreateOrConnectWithoutResep_standarInput = {
@@ -1224,6 +1304,7 @@ export type produkUpdateWithoutResep_standarInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuUpdateManyWithoutProdukNestedInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUpdateManyWithoutProdukNestedInput
@@ -1233,6 +1314,7 @@ export type produkUpdateWithoutResep_standarInput = {
   karyawan_produksi?: Prisma.karyawan_produksiUpdateOneWithoutProdukNestedInput
   owner?: Prisma.ownerUpdateOneWithoutProdukNestedInput
   pesanan_produk?: Prisma.pesanan_produkUpdateOneWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateWithoutResep_standarInput = {
@@ -1240,6 +1322,7 @@ export type produkUncheckedUpdateWithoutResep_standarInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1249,6 +1332,7 @@ export type produkUncheckedUpdateWithoutResep_standarInput = {
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUncheckedUpdateManyWithoutProdukNestedInput
   laporan?: Prisma.laporanUncheckedUpdateManyWithoutProdukNestedInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedUpdateManyWithoutProdukNestedInput
 }
 
 export type produkCreateWithoutDetail_pesanan_produkInput = {
@@ -1256,6 +1340,7 @@ export type produkCreateWithoutDetail_pesanan_produkInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuCreateNestedManyWithoutProdukInput
   laporan?: Prisma.laporanCreateNestedManyWithoutProdukInput
@@ -1265,6 +1350,7 @@ export type produkCreateWithoutDetail_pesanan_produkInput = {
   owner?: Prisma.ownerCreateNestedOneWithoutProdukInput
   pesanan_produk?: Prisma.pesanan_produkCreateNestedOneWithoutProdukInput
   resep_standar?: Prisma.resep_standarCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiCreateNestedManyWithoutProdukInput
 }
 
 export type produkUncheckedCreateWithoutDetail_pesanan_produkInput = {
@@ -1272,6 +1358,7 @@ export type produkUncheckedCreateWithoutDetail_pesanan_produkInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: string | null
   id_owner?: string | null
@@ -1281,6 +1368,7 @@ export type produkUncheckedCreateWithoutDetail_pesanan_produkInput = {
   laporan?: Prisma.laporanUncheckedCreateNestedManyWithoutProdukInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedCreateNestedManyWithoutProdukInput
   resep_standar?: Prisma.resep_standarUncheckedCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedCreateNestedManyWithoutProdukInput
 }
 
 export type produkCreateOrConnectWithoutDetail_pesanan_produkInput = {
@@ -1304,6 +1392,7 @@ export type produkUpdateWithoutDetail_pesanan_produkInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuUpdateManyWithoutProdukNestedInput
   laporan?: Prisma.laporanUpdateManyWithoutProdukNestedInput
@@ -1313,6 +1402,7 @@ export type produkUpdateWithoutDetail_pesanan_produkInput = {
   owner?: Prisma.ownerUpdateOneWithoutProdukNestedInput
   pesanan_produk?: Prisma.pesanan_produkUpdateOneWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateWithoutDetail_pesanan_produkInput = {
@@ -1320,6 +1410,7 @@ export type produkUncheckedUpdateWithoutDetail_pesanan_produkInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1329,6 +1420,7 @@ export type produkUncheckedUpdateWithoutDetail_pesanan_produkInput = {
   laporan?: Prisma.laporanUncheckedUpdateManyWithoutProdukNestedInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedUpdateManyWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUncheckedUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedUpdateManyWithoutProdukNestedInput
 }
 
 export type produkCreateWithoutPenugasan_karyawan_produkInput = {
@@ -1336,6 +1428,7 @@ export type produkCreateWithoutPenugasan_karyawan_produkInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuCreateNestedManyWithoutProdukInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkCreateNestedManyWithoutProdukInput
@@ -1345,6 +1438,7 @@ export type produkCreateWithoutPenugasan_karyawan_produkInput = {
   owner?: Prisma.ownerCreateNestedOneWithoutProdukInput
   pesanan_produk?: Prisma.pesanan_produkCreateNestedOneWithoutProdukInput
   resep_standar?: Prisma.resep_standarCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiCreateNestedManyWithoutProdukInput
 }
 
 export type produkUncheckedCreateWithoutPenugasan_karyawan_produkInput = {
@@ -1352,6 +1446,7 @@ export type produkUncheckedCreateWithoutPenugasan_karyawan_produkInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: string | null
   id_owner?: string | null
@@ -1361,6 +1456,7 @@ export type produkUncheckedCreateWithoutPenugasan_karyawan_produkInput = {
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUncheckedCreateNestedManyWithoutProdukInput
   laporan?: Prisma.laporanUncheckedCreateNestedManyWithoutProdukInput
   resep_standar?: Prisma.resep_standarUncheckedCreateNestedManyWithoutProdukInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedCreateNestedManyWithoutProdukInput
 }
 
 export type produkCreateOrConnectWithoutPenugasan_karyawan_produkInput = {
@@ -1384,6 +1480,7 @@ export type produkUpdateWithoutPenugasan_karyawan_produkInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuUpdateManyWithoutProdukNestedInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUpdateManyWithoutProdukNestedInput
@@ -1393,6 +1490,7 @@ export type produkUpdateWithoutPenugasan_karyawan_produkInput = {
   owner?: Prisma.ownerUpdateOneWithoutProdukNestedInput
   pesanan_produk?: Prisma.pesanan_produkUpdateOneWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateWithoutPenugasan_karyawan_produkInput = {
@@ -1400,6 +1498,7 @@ export type produkUncheckedUpdateWithoutPenugasan_karyawan_produkInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1409,6 +1508,95 @@ export type produkUncheckedUpdateWithoutPenugasan_karyawan_produkInput = {
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUncheckedUpdateManyWithoutProdukNestedInput
   laporan?: Prisma.laporanUncheckedUpdateManyWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUncheckedUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedUpdateManyWithoutProdukNestedInput
+}
+
+export type produkCreateWithoutHasil_produksiInput = {
+  id_produk: string
+  jumlah_target?: number | null
+  jumlah_berhasil?: number | null
+  nama_produk?: string | null
+  gambar_url?: string | null
+  harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  bahan_baku?: Prisma.bahan_bakuCreateNestedManyWithoutProdukInput
+  detail_pesanan_produk?: Prisma.detail_pesanan_produkCreateNestedManyWithoutProdukInput
+  laporan?: Prisma.laporanCreateNestedManyWithoutProdukInput
+  penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkCreateNestedManyWithoutProdukInput
+  admin?: Prisma.adminCreateNestedOneWithoutProdukInput
+  karyawan_produksi?: Prisma.karyawan_produksiCreateNestedOneWithoutProdukInput
+  owner?: Prisma.ownerCreateNestedOneWithoutProdukInput
+  pesanan_produk?: Prisma.pesanan_produkCreateNestedOneWithoutProdukInput
+  resep_standar?: Prisma.resep_standarCreateNestedManyWithoutProdukInput
+}
+
+export type produkUncheckedCreateWithoutHasil_produksiInput = {
+  id_produk: string
+  jumlah_target?: number | null
+  jumlah_berhasil?: number | null
+  nama_produk?: string | null
+  gambar_url?: string | null
+  harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  id_admin?: string | null
+  id_owner?: string | null
+  id_pesanan?: string | null
+  id_karyawan?: string | null
+  bahan_baku?: Prisma.bahan_bakuUncheckedCreateNestedManyWithoutProdukInput
+  detail_pesanan_produk?: Prisma.detail_pesanan_produkUncheckedCreateNestedManyWithoutProdukInput
+  laporan?: Prisma.laporanUncheckedCreateNestedManyWithoutProdukInput
+  penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedCreateNestedManyWithoutProdukInput
+  resep_standar?: Prisma.resep_standarUncheckedCreateNestedManyWithoutProdukInput
+}
+
+export type produkCreateOrConnectWithoutHasil_produksiInput = {
+  where: Prisma.produkWhereUniqueInput
+  create: Prisma.XOR<Prisma.produkCreateWithoutHasil_produksiInput, Prisma.produkUncheckedCreateWithoutHasil_produksiInput>
+}
+
+export type produkUpsertWithoutHasil_produksiInput = {
+  update: Prisma.XOR<Prisma.produkUpdateWithoutHasil_produksiInput, Prisma.produkUncheckedUpdateWithoutHasil_produksiInput>
+  create: Prisma.XOR<Prisma.produkCreateWithoutHasil_produksiInput, Prisma.produkUncheckedCreateWithoutHasil_produksiInput>
+  where?: Prisma.produkWhereInput
+}
+
+export type produkUpdateToOneWithWhereWithoutHasil_produksiInput = {
+  where?: Prisma.produkWhereInput
+  data: Prisma.XOR<Prisma.produkUpdateWithoutHasil_produksiInput, Prisma.produkUncheckedUpdateWithoutHasil_produksiInput>
+}
+
+export type produkUpdateWithoutHasil_produksiInput = {
+  id_produk?: Prisma.StringFieldUpdateOperationsInput | string
+  jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  bahan_baku?: Prisma.bahan_bakuUpdateManyWithoutProdukNestedInput
+  detail_pesanan_produk?: Prisma.detail_pesanan_produkUpdateManyWithoutProdukNestedInput
+  laporan?: Prisma.laporanUpdateManyWithoutProdukNestedInput
+  penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUpdateManyWithoutProdukNestedInput
+  admin?: Prisma.adminUpdateOneWithoutProdukNestedInput
+  karyawan_produksi?: Prisma.karyawan_produksiUpdateOneWithoutProdukNestedInput
+  owner?: Prisma.ownerUpdateOneWithoutProdukNestedInput
+  pesanan_produk?: Prisma.pesanan_produkUpdateOneWithoutProdukNestedInput
+  resep_standar?: Prisma.resep_standarUpdateManyWithoutProdukNestedInput
+}
+
+export type produkUncheckedUpdateWithoutHasil_produksiInput = {
+  id_produk?: Prisma.StringFieldUpdateOperationsInput | string
+  jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id_pesanan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id_karyawan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bahan_baku?: Prisma.bahan_bakuUncheckedUpdateManyWithoutProdukNestedInput
+  detail_pesanan_produk?: Prisma.detail_pesanan_produkUncheckedUpdateManyWithoutProdukNestedInput
+  laporan?: Prisma.laporanUncheckedUpdateManyWithoutProdukNestedInput
+  penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedUpdateManyWithoutProdukNestedInput
+  resep_standar?: Prisma.resep_standarUncheckedUpdateManyWithoutProdukNestedInput
 }
 
 export type produkCreateManyAdminInput = {
@@ -1416,6 +1604,7 @@ export type produkCreateManyAdminInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_owner?: string | null
   id_pesanan?: string | null
@@ -1427,6 +1616,7 @@ export type produkUpdateWithoutAdminInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuUpdateManyWithoutProdukNestedInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUpdateManyWithoutProdukNestedInput
@@ -1436,6 +1626,7 @@ export type produkUpdateWithoutAdminInput = {
   owner?: Prisma.ownerUpdateOneWithoutProdukNestedInput
   pesanan_produk?: Prisma.pesanan_produkUpdateOneWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateWithoutAdminInput = {
@@ -1443,6 +1634,7 @@ export type produkUncheckedUpdateWithoutAdminInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_pesanan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1452,6 +1644,7 @@ export type produkUncheckedUpdateWithoutAdminInput = {
   laporan?: Prisma.laporanUncheckedUpdateManyWithoutProdukNestedInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedUpdateManyWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUncheckedUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateManyWithoutAdminInput = {
@@ -1459,6 +1652,7 @@ export type produkUncheckedUpdateManyWithoutAdminInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_pesanan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1470,6 +1664,7 @@ export type produkCreateManyKaryawan_produksiInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: string | null
   id_owner?: string | null
@@ -1481,6 +1676,7 @@ export type produkUpdateWithoutKaryawan_produksiInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuUpdateManyWithoutProdukNestedInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUpdateManyWithoutProdukNestedInput
@@ -1490,6 +1686,7 @@ export type produkUpdateWithoutKaryawan_produksiInput = {
   owner?: Prisma.ownerUpdateOneWithoutProdukNestedInput
   pesanan_produk?: Prisma.pesanan_produkUpdateOneWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateWithoutKaryawan_produksiInput = {
@@ -1497,6 +1694,7 @@ export type produkUncheckedUpdateWithoutKaryawan_produksiInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1506,6 +1704,7 @@ export type produkUncheckedUpdateWithoutKaryawan_produksiInput = {
   laporan?: Prisma.laporanUncheckedUpdateManyWithoutProdukNestedInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedUpdateManyWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUncheckedUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateManyWithoutKaryawan_produksiInput = {
@@ -1513,6 +1712,7 @@ export type produkUncheckedUpdateManyWithoutKaryawan_produksiInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1524,6 +1724,7 @@ export type produkCreateManyOwnerInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: string | null
   id_pesanan?: string | null
@@ -1535,6 +1736,7 @@ export type produkUpdateWithoutOwnerInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuUpdateManyWithoutProdukNestedInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUpdateManyWithoutProdukNestedInput
@@ -1544,6 +1746,7 @@ export type produkUpdateWithoutOwnerInput = {
   karyawan_produksi?: Prisma.karyawan_produksiUpdateOneWithoutProdukNestedInput
   pesanan_produk?: Prisma.pesanan_produkUpdateOneWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateWithoutOwnerInput = {
@@ -1551,6 +1754,7 @@ export type produkUncheckedUpdateWithoutOwnerInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_pesanan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1560,6 +1764,7 @@ export type produkUncheckedUpdateWithoutOwnerInput = {
   laporan?: Prisma.laporanUncheckedUpdateManyWithoutProdukNestedInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedUpdateManyWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUncheckedUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateManyWithoutOwnerInput = {
@@ -1567,6 +1772,7 @@ export type produkUncheckedUpdateManyWithoutOwnerInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_pesanan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1578,6 +1784,7 @@ export type produkCreateManyPesanan_produkInput = {
   jumlah_target?: number | null
   jumlah_berhasil?: number | null
   nama_produk?: string | null
+  gambar_url?: string | null
   harga_jual?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: string | null
   id_owner?: string | null
@@ -1589,6 +1796,7 @@ export type produkUpdateWithoutPesanan_produkInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bahan_baku?: Prisma.bahan_bakuUpdateManyWithoutProdukNestedInput
   detail_pesanan_produk?: Prisma.detail_pesanan_produkUpdateManyWithoutProdukNestedInput
@@ -1598,6 +1806,7 @@ export type produkUpdateWithoutPesanan_produkInput = {
   karyawan_produksi?: Prisma.karyawan_produksiUpdateOneWithoutProdukNestedInput
   owner?: Prisma.ownerUpdateOneWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateWithoutPesanan_produkInput = {
@@ -1605,6 +1814,7 @@ export type produkUncheckedUpdateWithoutPesanan_produkInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1614,6 +1824,7 @@ export type produkUncheckedUpdateWithoutPesanan_produkInput = {
   laporan?: Prisma.laporanUncheckedUpdateManyWithoutProdukNestedInput
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkUncheckedUpdateManyWithoutProdukNestedInput
   resep_standar?: Prisma.resep_standarUncheckedUpdateManyWithoutProdukNestedInput
+  hasil_produksi?: Prisma.hasil_produksiUncheckedUpdateManyWithoutProdukNestedInput
 }
 
 export type produkUncheckedUpdateManyWithoutPesanan_produkInput = {
@@ -1621,6 +1832,7 @@ export type produkUncheckedUpdateManyWithoutPesanan_produkInput = {
   jumlah_target?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   jumlah_berhasil?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nama_produk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gambar_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   harga_jual?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1638,6 +1850,7 @@ export type ProdukCountOutputType = {
   laporan: number
   penugasan_karyawan_produk: number
   resep_standar: number
+  hasil_produksi: number
 }
 
 export type ProdukCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1646,6 +1859,7 @@ export type ProdukCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   laporan?: boolean | ProdukCountOutputTypeCountLaporanArgs
   penugasan_karyawan_produk?: boolean | ProdukCountOutputTypeCountPenugasan_karyawan_produkArgs
   resep_standar?: boolean | ProdukCountOutputTypeCountResep_standarArgs
+  hasil_produksi?: boolean | ProdukCountOutputTypeCountHasil_produksiArgs
 }
 
 /**
@@ -1693,12 +1907,20 @@ export type ProdukCountOutputTypeCountResep_standarArgs<ExtArgs extends runtime.
   where?: Prisma.resep_standarWhereInput
 }
 
+/**
+ * ProdukCountOutputType without action
+ */
+export type ProdukCountOutputTypeCountHasil_produksiArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.hasil_produksiWhereInput
+}
+
 
 export type produkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id_produk?: boolean
   jumlah_target?: boolean
   jumlah_berhasil?: boolean
   nama_produk?: boolean
+  gambar_url?: boolean
   harga_jual?: boolean
   id_admin?: boolean
   id_owner?: boolean
@@ -1713,6 +1935,7 @@ export type produkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   owner?: boolean | Prisma.produk$ownerArgs<ExtArgs>
   pesanan_produk?: boolean | Prisma.produk$pesanan_produkArgs<ExtArgs>
   resep_standar?: boolean | Prisma.produk$resep_standarArgs<ExtArgs>
+  hasil_produksi?: boolean | Prisma.produk$hasil_produksiArgs<ExtArgs>
   _count?: boolean | Prisma.ProdukCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["produk"]>
 
@@ -1721,6 +1944,7 @@ export type produkSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   jumlah_target?: boolean
   jumlah_berhasil?: boolean
   nama_produk?: boolean
+  gambar_url?: boolean
   harga_jual?: boolean
   id_admin?: boolean
   id_owner?: boolean
@@ -1737,6 +1961,7 @@ export type produkSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   jumlah_target?: boolean
   jumlah_berhasil?: boolean
   nama_produk?: boolean
+  gambar_url?: boolean
   harga_jual?: boolean
   id_admin?: boolean
   id_owner?: boolean
@@ -1753,6 +1978,7 @@ export type produkSelectScalar = {
   jumlah_target?: boolean
   jumlah_berhasil?: boolean
   nama_produk?: boolean
+  gambar_url?: boolean
   harga_jual?: boolean
   id_admin?: boolean
   id_owner?: boolean
@@ -1760,7 +1986,7 @@ export type produkSelectScalar = {
   id_karyawan?: boolean
 }
 
-export type produkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_produk" | "jumlah_target" | "jumlah_berhasil" | "nama_produk" | "harga_jual" | "id_admin" | "id_owner" | "id_pesanan" | "id_karyawan", ExtArgs["result"]["produk"]>
+export type produkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_produk" | "jumlah_target" | "jumlah_berhasil" | "nama_produk" | "gambar_url" | "harga_jual" | "id_admin" | "id_owner" | "id_pesanan" | "id_karyawan", ExtArgs["result"]["produk"]>
 export type produkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bahan_baku?: boolean | Prisma.produk$bahan_bakuArgs<ExtArgs>
   detail_pesanan_produk?: boolean | Prisma.produk$detail_pesanan_produkArgs<ExtArgs>
@@ -1771,6 +1997,7 @@ export type produkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   owner?: boolean | Prisma.produk$ownerArgs<ExtArgs>
   pesanan_produk?: boolean | Prisma.produk$pesanan_produkArgs<ExtArgs>
   resep_standar?: boolean | Prisma.produk$resep_standarArgs<ExtArgs>
+  hasil_produksi?: boolean | Prisma.produk$hasil_produksiArgs<ExtArgs>
   _count?: boolean | Prisma.ProdukCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type produkIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1798,12 +2025,14 @@ export type $produkPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     owner: Prisma.$ownerPayload<ExtArgs> | null
     pesanan_produk: Prisma.$pesanan_produkPayload<ExtArgs> | null
     resep_standar: Prisma.$resep_standarPayload<ExtArgs>[]
+    hasil_produksi: Prisma.$hasil_produksiPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id_produk: string
     jumlah_target: number | null
     jumlah_berhasil: number | null
     nama_produk: string | null
+    gambar_url: string | null
     harga_jual: runtime.Decimal | null
     id_admin: string | null
     id_owner: string | null
@@ -2212,6 +2441,7 @@ export interface Prisma__produkClient<T, Null = never, ExtArgs extends runtime.T
   owner<T extends Prisma.produk$ownerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.produk$ownerArgs<ExtArgs>>): Prisma.Prisma__ownerClient<runtime.Types.Result.GetResult<Prisma.$ownerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   pesanan_produk<T extends Prisma.produk$pesanan_produkArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.produk$pesanan_produkArgs<ExtArgs>>): Prisma.Prisma__pesanan_produkClient<runtime.Types.Result.GetResult<Prisma.$pesanan_produkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   resep_standar<T extends Prisma.produk$resep_standarArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.produk$resep_standarArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$resep_standarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  hasil_produksi<T extends Prisma.produk$hasil_produksiArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.produk$hasil_produksiArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$hasil_produksiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2245,6 +2475,7 @@ export interface produkFieldRefs {
   readonly jumlah_target: Prisma.FieldRef<"produk", 'Int'>
   readonly jumlah_berhasil: Prisma.FieldRef<"produk", 'Int'>
   readonly nama_produk: Prisma.FieldRef<"produk", 'String'>
+  readonly gambar_url: Prisma.FieldRef<"produk", 'String'>
   readonly harga_jual: Prisma.FieldRef<"produk", 'Decimal'>
   readonly id_admin: Prisma.FieldRef<"produk", 'String'>
   readonly id_owner: Prisma.FieldRef<"produk", 'String'>
@@ -2844,6 +3075,30 @@ export type produk$resep_standarArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.Resep_standarScalarFieldEnum | Prisma.Resep_standarScalarFieldEnum[]
+}
+
+/**
+ * produk.hasil_produksi
+ */
+export type produk$hasil_produksiArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the hasil_produksi
+   */
+  select?: Prisma.hasil_produksiSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the hasil_produksi
+   */
+  omit?: Prisma.hasil_produksiOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.hasil_produksiInclude<ExtArgs> | null
+  where?: Prisma.hasil_produksiWhereInput
+  orderBy?: Prisma.hasil_produksiOrderByWithRelationInput | Prisma.hasil_produksiOrderByWithRelationInput[]
+  cursor?: Prisma.hasil_produksiWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Hasil_produksiScalarFieldEnum | Prisma.Hasil_produksiScalarFieldEnum[]
 }
 
 /**

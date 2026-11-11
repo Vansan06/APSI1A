@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model resep_bahan_baku
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+ * 
  */
 export type resep_bahan_bakuModel = runtime.Types.Result.DefaultSelection<Prisma.$resep_bahan_bakuPayload>
 

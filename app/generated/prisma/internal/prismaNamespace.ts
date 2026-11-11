@@ -410,7 +410,10 @@ export const ModelName = {
   detail_pesanan_bahan_baku: 'detail_pesanan_bahan_baku',
   detail_pesanan_produk: 'detail_pesanan_produk',
   penugasan_karyawan_produk: 'penugasan_karyawan_produk',
-  resep_bahan_baku: 'resep_bahan_baku'
+  resep_bahan_baku: 'resep_bahan_baku',
+  akun_pengguna: 'akun_pengguna',
+  hasil_produksi: 'hasil_produksi',
+  kapasitas_harian: 'kapasitas_harian'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -426,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "admin" | "bahan_baku" | "karyawan_produksi" | "laporan" | "owner" | "pesanan_bahan_baku" | "pesanan_produk" | "produk" | "resep_standar" | "supplier" | "detail_pesanan_bahan_baku" | "detail_pesanan_produk" | "penugasan_karyawan_produk" | "resep_bahan_baku"
+    modelProps: "admin" | "bahan_baku" | "karyawan_produksi" | "laporan" | "owner" | "pesanan_bahan_baku" | "pesanan_produk" | "produk" | "resep_standar" | "supplier" | "detail_pesanan_bahan_baku" | "detail_pesanan_produk" | "penugasan_karyawan_produk" | "resep_bahan_baku" | "akun_pengguna" | "hasil_produksi" | "kapasitas_harian"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1466,6 +1469,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    akun_pengguna: {
+      payload: Prisma.$akun_penggunaPayload<ExtArgs>
+      fields: Prisma.akun_penggunaFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.akun_penggunaFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$akun_penggunaPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.akun_penggunaFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$akun_penggunaPayload>
+        }
+        findFirst: {
+          args: Prisma.akun_penggunaFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$akun_penggunaPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.akun_penggunaFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$akun_penggunaPayload>
+        }
+        findMany: {
+          args: Prisma.akun_penggunaFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$akun_penggunaPayload>[]
+        }
+        create: {
+          args: Prisma.akun_penggunaCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$akun_penggunaPayload>
+        }
+        createMany: {
+          args: Prisma.akun_penggunaCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.akun_penggunaCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$akun_penggunaPayload>[]
+        }
+        delete: {
+          args: Prisma.akun_penggunaDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$akun_penggunaPayload>
+        }
+        update: {
+          args: Prisma.akun_penggunaUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$akun_penggunaPayload>
+        }
+        deleteMany: {
+          args: Prisma.akun_penggunaDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.akun_penggunaUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.akun_penggunaUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$akun_penggunaPayload>[]
+        }
+        upsert: {
+          args: Prisma.akun_penggunaUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$akun_penggunaPayload>
+        }
+        aggregate: {
+          args: Prisma.Akun_penggunaAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAkun_pengguna>
+        }
+        groupBy: {
+          args: Prisma.akun_penggunaGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Akun_penggunaGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.akun_penggunaCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Akun_penggunaCountAggregateOutputType> | number
+        }
+      }
+    }
+    hasil_produksi: {
+      payload: Prisma.$hasil_produksiPayload<ExtArgs>
+      fields: Prisma.hasil_produksiFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.hasil_produksiFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$hasil_produksiPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.hasil_produksiFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$hasil_produksiPayload>
+        }
+        findFirst: {
+          args: Prisma.hasil_produksiFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$hasil_produksiPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.hasil_produksiFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$hasil_produksiPayload>
+        }
+        findMany: {
+          args: Prisma.hasil_produksiFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$hasil_produksiPayload>[]
+        }
+        create: {
+          args: Prisma.hasil_produksiCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$hasil_produksiPayload>
+        }
+        createMany: {
+          args: Prisma.hasil_produksiCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.hasil_produksiCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$hasil_produksiPayload>[]
+        }
+        delete: {
+          args: Prisma.hasil_produksiDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$hasil_produksiPayload>
+        }
+        update: {
+          args: Prisma.hasil_produksiUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$hasil_produksiPayload>
+        }
+        deleteMany: {
+          args: Prisma.hasil_produksiDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.hasil_produksiUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.hasil_produksiUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$hasil_produksiPayload>[]
+        }
+        upsert: {
+          args: Prisma.hasil_produksiUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$hasil_produksiPayload>
+        }
+        aggregate: {
+          args: Prisma.Hasil_produksiAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHasil_produksi>
+        }
+        groupBy: {
+          args: Prisma.hasil_produksiGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Hasil_produksiGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.hasil_produksiCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Hasil_produksiCountAggregateOutputType> | number
+        }
+      }
+    }
+    kapasitas_harian: {
+      payload: Prisma.$kapasitas_harianPayload<ExtArgs>
+      fields: Prisma.kapasitas_harianFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.kapasitas_harianFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kapasitas_harianPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.kapasitas_harianFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kapasitas_harianPayload>
+        }
+        findFirst: {
+          args: Prisma.kapasitas_harianFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kapasitas_harianPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.kapasitas_harianFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kapasitas_harianPayload>
+        }
+        findMany: {
+          args: Prisma.kapasitas_harianFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kapasitas_harianPayload>[]
+        }
+        create: {
+          args: Prisma.kapasitas_harianCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kapasitas_harianPayload>
+        }
+        createMany: {
+          args: Prisma.kapasitas_harianCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.kapasitas_harianCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kapasitas_harianPayload>[]
+        }
+        delete: {
+          args: Prisma.kapasitas_harianDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kapasitas_harianPayload>
+        }
+        update: {
+          args: Prisma.kapasitas_harianUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kapasitas_harianPayload>
+        }
+        deleteMany: {
+          args: Prisma.kapasitas_harianDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.kapasitas_harianUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.kapasitas_harianUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kapasitas_harianPayload>[]
+        }
+        upsert: {
+          args: Prisma.kapasitas_harianUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$kapasitas_harianPayload>
+        }
+        aggregate: {
+          args: Prisma.Kapasitas_harianAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKapasitas_harian>
+        }
+        groupBy: {
+          args: Prisma.kapasitas_harianGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Kapasitas_harianGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.kapasitas_harianCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Kapasitas_harianCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1592,6 +1817,7 @@ export const ProdukScalarFieldEnum = {
   jumlah_target: 'jumlah_target',
   jumlah_berhasil: 'jumlah_berhasil',
   nama_produk: 'nama_produk',
+  gambar_url: 'gambar_url',
   harga_jual: 'harga_jual',
   id_admin: 'id_admin',
   id_owner: 'id_owner',
@@ -1667,6 +1893,51 @@ export const Resep_bahan_bakuScalarFieldEnum = {
 } as const
 
 export type Resep_bahan_bakuScalarFieldEnum = (typeof Resep_bahan_bakuScalarFieldEnum)[keyof typeof Resep_bahan_bakuScalarFieldEnum]
+
+
+export const Akun_penggunaScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  email: 'email',
+  password_hash: 'password_hash',
+  role: 'role',
+  ref_id: 'ref_id',
+  avatar_url: 'avatar_url',
+  phone: 'phone',
+  alamat: 'alamat',
+  aktif: 'aktif',
+  akses_terakhir: 'akses_terakhir',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Akun_penggunaScalarFieldEnum = (typeof Akun_penggunaScalarFieldEnum)[keyof typeof Akun_penggunaScalarFieldEnum]
+
+
+export const Hasil_produksiScalarFieldEnum = {
+  id: 'id',
+  id_produk: 'id_produk',
+  tanggal: 'tanggal',
+  jumlah_target: 'jumlah_target',
+  jumlah_berhasil: 'jumlah_berhasil',
+  jumlah_ditolak: 'jumlah_ditolak',
+  catatan_mutu: 'catatan_mutu',
+  id_karyawan: 'id_karyawan',
+  created_at: 'created_at'
+} as const
+
+export type Hasil_produksiScalarFieldEnum = (typeof Hasil_produksiScalarFieldEnum)[keyof typeof Hasil_produksiScalarFieldEnum]
+
+
+export const Kapasitas_harianScalarFieldEnum = {
+  tanggal: 'tanggal',
+  kapasitas_total: 'kapasitas_total',
+  kapasitas_terpakai: 'kapasitas_terpakai',
+  jam_operasional: 'jam_operasional',
+  updated_at: 'updated_at'
+} as const
+
+export type Kapasitas_harianScalarFieldEnum = (typeof Kapasitas_harianScalarFieldEnum)[keyof typeof Kapasitas_harianScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1752,6 +2023,13 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1933,6 +2211,9 @@ export type GlobalOmitConfig = {
   detail_pesanan_produk?: Prisma.detail_pesanan_produkOmit
   penugasan_karyawan_produk?: Prisma.penugasan_karyawan_produkOmit
   resep_bahan_baku?: Prisma.resep_bahan_bakuOmit
+  akun_pengguna?: Prisma.akun_penggunaOmit
+  hasil_produksi?: Prisma.hasil_produksiOmit
+  kapasitas_harian?: Prisma.kapasitas_harianOmit
 }
 
 /* Types for Logging */

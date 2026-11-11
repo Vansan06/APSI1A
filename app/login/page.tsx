@@ -6,34 +6,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 
-// Data 4 Akun Resmi & Role Masing-Masing
-const USERS_DATABASE = [
-  {
-    email: 'aunurrahman@gmail.com',
-    password: 'DonatContoh26',
-    role: 'owner',
-    redirectUrl: '/owner',
-  },
-  {
-    email: 'enjiputrii@gmail.com',
-    password: 'DonatContoh26',
-    role: 'admin',
-    redirectUrl: '/admin',
-  },
-  {
-    email: 'sitirahmah@gmail.com',
-    password: 'DonatContoh26',
-    role: 'karyawan produksi',
-    redirectUrl: '/karyawan-produksi',
-  },
-  {
-    email: 'budiman@gmail.com',
-    password: 'DonatContoh26',
-    role: 'supplier',
-    redirectUrl: '/supplier',
-  },
-];
-
 export default function LoginPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -46,30 +18,32 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [showErrorModal, setShowErrorModal] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // 1. Cari user berdasarkan email (case-insensitive)
-    const userFound = USERS_DATABASE.find(
-      (u) => u.email.toLowerCase() === formData.email.trim().toLowerCase()
-    );
-
-    // Jika Email Tidak Ditemukan
-    if (!userFound) {
-      setErrorMessage('Akun tidak ditemukan');
+    setShowErrorModal(false);
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        setErrorMessage(result.error || "Email atau password tidak valid");
+        setShowErrorModal(true);
+        return;
+      }
+      const destinations: Record<string, string> = {
+        admin: "/admin",
+        owner: "/owner",
+        supplier: "/supplier",
+        "karyawan produksi": "/karyawan-produksi",
+      };
+      router.replace(destinations[result.data.role] || "/");
+    } catch {
+      setErrorMessage("Tidak dapat terhubung ke server. Coba kembali.");
       setShowErrorModal(true);
-      return;
     }
-
-    // 2. Cek Password
-    if (userFound.password !== formData.password) {
-      setErrorMessage('Password salah');
-      setShowErrorModal(true);
-      return;
-    }
-
-    // 3. Jika Email & Password Benar, Arahkan ke Halaman Role Masing-Masing
-    router.push(userFound.redirectUrl);
   };
 
   return (
@@ -143,7 +117,7 @@ export default function LoginPage() {
           <div className="arch-container">
             <div className="logo-image-wrapper">
               <Image
-                src="/logo-dfo.png"
+                src="/donat-cokelat.png"
                 alt="D.FO Donat Logo"
                 width={200}
                 height={200}

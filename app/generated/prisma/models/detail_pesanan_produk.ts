@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model detail_pesanan_produk
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+ * 
  */
 export type detail_pesanan_produkModel = runtime.Types.Result.DefaultSelection<Prisma.$detail_pesanan_produkPayload>
 

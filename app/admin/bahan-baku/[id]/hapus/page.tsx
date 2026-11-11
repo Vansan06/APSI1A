@@ -86,7 +86,9 @@ export default function HapusBahanBakuAdminPage() {
 
   const data = HAPUS_BAHAN_MAP[id] || HAPUS_BAHAN_MAP['BB-001'];
 
-  const handleConfirmHapus = () => {
+  const handleConfirmHapus = async () => {
+    const response=await fetch(`/api/bahan-baku/${encodeURIComponent(id)}`,{method:"DELETE"});
+    if(!response.ok){const result=await response.json();alert(result.error||"Gagal menghapus data.");return;}
     router.push('/admin/bahan-baku?notify=hapus');
   };
 
