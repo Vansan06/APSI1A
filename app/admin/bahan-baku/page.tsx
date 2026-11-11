@@ -1,20 +1,8 @@
-
 'use client';
 
-import React, {
-  Suspense,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-
-import {
-  useSearchParams,
-  useRouter,
-} from 'next/navigation';
-
+import { useRouter } from 'next/navigation';
 import {
   Plus,
   Check,
@@ -27,7 +15,7 @@ import {
 } from 'lucide-react';
 
 // ======================================================
-// INTERFACE DATA BAHAN BAKU
+// TIPE DATA
 // ======================================================
 
 export interface BahanBakuItem {
@@ -57,8 +45,11 @@ interface ApiResponse {
   error?: string;
 }
 
+type FilterKondisi = 'Semua kondisi' | 'Aman' | 'Stok rendah';
+
 // ======================================================
-// DATA AWAL / FALLBACK
+// DATA FALLBACK
+// Data ini ditampilkan jika API gagal diakses.
 // ======================================================
 
 export const BAHAN_BAKU_LIST: BahanBakuItem[] = [
@@ -119,32 +110,53 @@ export const BAHAN_BAKU_LIST: BahanBakuItem[] = [
 ];
 
 // ======================================================
-// FUNGSI FORMAT ANGKA
+// FUNGSI BANTU
 // ======================================================
 
-function formatAngka(value: number) {
+function formatAngka(value: number): string {
   return new Intl.NumberFormat('id-ID').format(value);
 }
 
-function formatRupiah(value: number) {
+function formatRupiah(value: number): string {
   return `Rp${formatAngka(value)}`;
 }
 
-function getNumber(value: string) {
-  const angka = value.replace(/[^\d,-]/g, '').replace(/\./g, '').replace(',', '.');
-  return Number(angka) || 0;
+/**
+ * Mengubah teks seperti:
+ * "125 kg"       -> 125
+ * "Rp12.000/kg"  -> 12000
+ * "12,5 kg"      -> 12.5
+ */
+function getNumber(value: string): number {
+  const cleaned = value
+    .replace(/[^\d,.-]/g, '')
+    .replace(/\./g, '')
+    .replace(',', '.');
+
+  const result = Number(cleaned);
+  return Number.isFinite(result) ? result : 0;
+}
+
+function getNumericValue(value: number | string | null | undefined): number {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  if (typeof value === 'string') {
+    return getNumber(value);
+  }
+
+  return 0;
 }
 
 // ======================================================
-// FUNGSI MAPPING DATA API
+// MAPPING DATA API KE FORMAT TABEL
 // ======================================================
 
-function mapBahanBaku(
-  item: BahanBakuApi
-): BahanBakuItem {
-  const stok = Number(item.stok_tersedia ?? 0);
-  const minimum = Number(item.stok_minimal ?? 0);
-  const harga = Number(item.harga_satuan ?? 0);
+function mapBahanBaku(item: BahanBakuApi): BahanBakuItem {
+  const stok = getNumericValue(item.stok_tersedia);
+  const minimum = getNumericValue(item.stok_minimal);
+  const harga = getNumericValue(item.harga_satuan);
 
   const supplier =
     typeof item.supplier === 'string'
@@ -163,33 +175,40 @@ function mapBahanBaku(
 }
 
 // ======================================================
-// KOMPONEN UTAMA
+// KOMPONEN HALAMAN
 // ======================================================
 
-function AdminDataBahanBakuContent() {
-
-  const searchParams = useSearchParams();
+export default function AdminDataBahanBakuPage() {
   const router = useRouter();
 
+  // ----------------------------------------------------
   // STATE DATA
+  // ----------------------------------------------------
+
   const [bahanRows, setBahanRows] =
     useState<BahanBakuItem[]>(BAHAN_BAKU_LIST);
 
-  const [loading, setLoading] = useState(true);
-  const [fetchError, setFetchError] = useState('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [fetchError, setFetchError] = useState<string>('');
 
-  // STATE SEARCH DAN FILTER
-  const [search, setSearch] = useState('');
+  // ----------------------------------------------------
+  // STATE PENCARIAN DAN FILTER
+  // ----------------------------------------------------
+
+  const [search, setSearch] = useState<string>('');
   const [filterKondisi, setFilterKondisi] =
-    useState('Semua kondisi');
+    useState<FilterKondisi>('Semua kondisi');
 
-  // STATE MODAL
-  const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
-  const [modalDesc, setModalDesc] = useState('');
+  // ----------------------------------------------------
+  // STATE MODAL NOTIFIKASI
+  // ----------------------------------------------------
+
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>('');
+  const [modalDesc, setModalDesc] = useState<string>('');
 
   // ====================================================
-  // AMBIL DATA DARI DATABASE MELALUI API
+  // AMBIL DATA BAHAN BAKU DARI API
   // ====================================================
 
   useEffect(() => {
@@ -203,13 +222,12 @@ function AdminDataBahanBakuContent() {
         const response = await fetch('/api/bahan-baku', {
           method: 'GET',
           cache: 'no-store',
+          credentials: 'same-origin',
           signal: controller.signal,
         });
 
         if (!response.ok) {
-          throw new Error(
-            `Gagal mengambil data. HTTP ${response.status}`
-          );
+          throw new Error(`Gagal mengambil data. HTTP ${response.status}`);
         }
 
         const result: ApiResponse = await response.json();
@@ -225,19 +243,18 @@ function AdminDataBahanBakuContent() {
           .map(mapBahanBaku);
 
         setBahanRows(mappedData);
-
       } catch (error) {
         if (!controller.signal.aborted) {
-          console.error(
-            'Gagal memuat data bahan baku:',
-            error
-          );
+          console.error('Gagal memuat data bahan baku:', error);
 
           setFetchError(
             error instanceof Error
               ? error.message
               : 'Terjadi kesalahan saat mengambil data.'
           );
+
+          // Jika API gagal, data fallback tetap ditampilkan.
+          setBahanRows(BAHAN_BAKU_LIST);
         }
       } finally {
         if (!controller.signal.aborted) {
@@ -254,34 +271,31 @@ function AdminDataBahanBakuContent() {
   }, []);
 
   // ====================================================
-  // NOTIFIKASI BERDASARKAN QUERY PARAMETER
+  // NOTIFIKASI QUERY PARAMETER
+  //
+  // Tidak menggunakan useSearchParams().
+  // Parameter dibaca di useEffect sehingga hanya dijalankan
+  // di browser setelah komponen terpasang.
   // ====================================================
 
-  const notifyType = searchParams.get('notify');
-
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const notifyType = params.get('notify');
+
     if (notifyType === 'simpan') {
       setModalTitle('Berhasil disimpan');
-      setModalDesc(
-        'Data bahan baku berhasil disimpan.'
-      );
+      setModalDesc('Data bahan baku berhasil disimpan.');
       setShowModal(true);
-
     } else if (notifyType === 'edit') {
       setModalTitle('Berhasil diedit');
-      setModalDesc(
-        'Data bahan baku berhasil diperbarui.'
-      );
+      setModalDesc('Data bahan baku berhasil diperbarui.');
       setShowModal(true);
-
     } else if (notifyType === 'hapus') {
       setModalTitle('Berhasil dihapus');
-      setModalDesc(
-        'Data bahan baku berhasil dihapus.'
-      );
+      setModalDesc('Data bahan baku berhasil dihapus.');
       setShowModal(true);
     }
-  }, [notifyType]);
+  }, []);
 
   // ====================================================
   // TUTUP MODAL
@@ -289,17 +303,17 @@ function AdminDataBahanBakuContent() {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    router.replace('/admin/bahan-baku');
+    router.replace('/admin/bahan-baku', { scroll: false });
   };
 
   // ====================================================
-  // FILTER DAN PENCARIAN
+  // PENCARIAN DAN FILTER
   // ====================================================
 
   const filteredRows = useMemo(() => {
-    return bahanRows.filter((item) => {
-      const keyword = search.toLowerCase();
+    const keyword = search.trim().toLowerCase();
 
+    return bahanRows.filter((item) => {
       const cocokSearch =
         item.nama.toLowerCase().includes(keyword) ||
         item.id.toLowerCase().includes(keyword) ||
@@ -314,7 +328,7 @@ function AdminDataBahanBakuContent() {
   }, [bahanRows, search, filterKondisi]);
 
   // ====================================================
-  // HITUNG STATISTIK
+  // STATISTIK
   // ====================================================
 
   const jumlahBahan = bahanRows.length;
@@ -323,17 +337,12 @@ function AdminDataBahanBakuContent() {
     (item) => item.kondisi === 'Stok rendah'
   ).length;
 
-  const nilaiPersediaan = bahanRows.reduce(
-    (total, item) => {
-      return total +
-        getNumber(item.stok) *
-        getNumber(item.hargaSatuan);
-    },
-    0
-  );
+  const nilaiPersediaan = bahanRows.reduce((total, item) => {
+    return total + getNumber(item.stok) * getNumber(item.hargaSatuan);
+  }, 0);
 
   // ====================================================
-  // TAMPILAN HALAMAN
+  // TAMPILAN
   // ====================================================
 
   return (
@@ -345,9 +354,7 @@ function AdminDataBahanBakuContent() {
         width: '100%',
       }}
     >
-
-      {/* HEADER UTAMA */}
-
+      {/* HEADER HALAMAN */}
       <div>
         <h2
           style={{
@@ -367,13 +374,11 @@ function AdminDataBahanBakuContent() {
             marginTop: '5px',
           }}
         >
-          Kelola persediaan bahan baku dan pantau
-          kondisi stok gudang.
+          Kelola persediaan bahan baku dan pantau kondisi stok gudang.
         </p>
       </div>
 
       {/* PESAN ERROR API */}
-
       {fetchError && (
         <div
           style={{
@@ -386,17 +391,14 @@ function AdminDataBahanBakuContent() {
           }}
         >
           <strong>Gagal memperbarui data dari server.</strong>
+          <div style={{ marginTop: '4px' }}>{fetchError}</div>
           <div style={{ marginTop: '4px' }}>
-            {fetchError}
-          </div>
-          <div style={{ marginTop: '4px' }}>
-            Data awal sementara ditampilkan jika tersedia.
+            Data contoh sementara ditampilkan jika tersedia.
           </div>
         </div>
       )}
 
-      {/* 3 KARTU STATISTIK */}
-
+      {/* KARTU STATISTIK */}
       <div
         style={{
           display: 'grid',
@@ -404,22 +406,12 @@ function AdminDataBahanBakuContent() {
           gap: '16px',
         }}
       >
-
-        {/* CARD 1 */}
-
+        {/* TOTAL BAHAN */}
         <div style={statCardStyle}>
           <div style={{ flex: 1 }}>
-            <div style={statLabelStyle}>
-              Jenis bahan
-            </div>
-
-            <div style={statValueStyle}>
-              {jumlahBahan} bahan
-            </div>
-
-            <div style={statDescStyle}>
-              Tersimpan di gudang utama
-            </div>
+            <div style={statLabelStyle}>Jenis bahan</div>
+            <div style={statValueStyle}>{jumlahBahan} bahan</div>
+            <div style={statDescStyle}>Tersimpan di gudang utama</div>
           </div>
 
           <div style={iconBadgeStyle}>
@@ -427,21 +419,12 @@ function AdminDataBahanBakuContent() {
           </div>
         </div>
 
-        {/* CARD 2 */}
-
+        {/* STOK RENDAH */}
         <div style={statCardStyle}>
           <div style={{ flex: 1 }}>
-            <div style={statLabelStyle}>
-              Di bawah minimum
-            </div>
-
-            <div style={statValueStyle}>
-              {jumlahStokRendah} bahan
-            </div>
-
-            <div style={statDescStyle}>
-              Memerlukan pemesanan ulang
-            </div>
+            <div style={statLabelStyle}>Di bawah minimum</div>
+            <div style={statValueStyle}>{jumlahStokRendah} bahan</div>
+            <div style={statDescStyle}>Memerlukan pemesanan ulang</div>
           </div>
 
           <div
@@ -450,30 +433,23 @@ function AdminDataBahanBakuContent() {
               backgroundColor: '#fef3c7',
             }}
           >
-            <AlertTriangle
-              size={20}
-              color="#b45309"
-            />
+            <AlertTriangle size={20} color="#b45309" />
           </div>
         </div>
 
-        {/* CARD 3 */}
-
+        {/* NILAI PERSEDIAAN */}
         <div style={statCardStyle}>
-          <div style={{ flex: 1 }}>
-            <div style={statLabelStyle}>
-              Nilai persediaan
-            </div>
-
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={statLabelStyle}>Nilai persediaan</div>
             <div
               style={{
                 ...statValueStyle,
                 fontSize: '21px',
+                overflowWrap: 'anywhere',
               }}
             >
               {formatRupiah(nilaiPersediaan)}
             </div>
-
             <div style={statDescStyle}>
               Berdasarkan stok × harga satuan
             </div>
@@ -483,11 +459,9 @@ function AdminDataBahanBakuContent() {
             <Wallet size={20} color="#6b21a8" />
           </div>
         </div>
-
       </div>
 
       {/* TABEL PERSEDIAAN */}
-
       <div
         style={{
           backgroundColor: '#ffffff',
@@ -496,14 +470,13 @@ function AdminDataBahanBakuContent() {
           boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
         }}
       >
-
         {/* HEADER TABEL */}
-
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
+            gap: '12px',
             marginBottom: '16px',
           }}
         >
@@ -522,6 +495,7 @@ function AdminDataBahanBakuContent() {
             style={{
               fontSize: '11px',
               color: '#888',
+              whiteSpace: 'nowrap',
             }}
           >
             {filteredRows.length} data
@@ -529,7 +503,6 @@ function AdminDataBahanBakuContent() {
         </div>
 
         {/* SEARCH DAN FILTER */}
-
         <div
           style={{
             display: 'flex',
@@ -538,7 +511,6 @@ function AdminDataBahanBakuContent() {
             flexWrap: 'wrap',
           }}
         >
-
           <div
             style={{
               flex: 1,
@@ -559,10 +531,9 @@ function AdminDataBahanBakuContent() {
             <input
               type="text"
               value={search}
-              onChange={(event) =>
-                setSearch(event.target.value)
-              }
+              onChange={(event) => setSearch(event.target.value)}
               placeholder="Cari kode atau nama bahan..."
+              aria-label="Cari bahan baku"
               style={{
                 width: '100%',
                 boxSizing: 'border-box',
@@ -578,8 +549,9 @@ function AdminDataBahanBakuContent() {
           <select
             value={filterKondisi}
             onChange={(event) =>
-              setFilterKondisi(event.target.value)
+              setFilterKondisi(event.target.value as FilterKondisi)
             }
+            aria-label="Filter kondisi stok"
             style={{
               padding: '8px 14px',
               borderRadius: '8px',
@@ -588,20 +560,15 @@ function AdminDataBahanBakuContent() {
               backgroundColor: '#fff',
             }}
           >
-            <option value="Semua kondisi">
-              Semua kondisi
-            </option>
-            <option value="Aman">
-              Aman
-            </option>
-            <option value="Stok rendah">
-              Stok rendah
-            </option>
+            <option value="Semua kondisi">Semua kondisi</option>
+            <option value="Aman">Aman</option>
+            <option value="Stok rendah">Stok rendah</option>
           </select>
 
           <select
             disabled
             defaultValue="Gudang utama"
+            aria-label="Lokasi gudang"
             style={{
               padding: '8px 14px',
               borderRadius: '8px',
@@ -610,14 +577,11 @@ function AdminDataBahanBakuContent() {
               backgroundColor: '#f8fafc',
             }}
           >
-            <option value="Gudang utama">
-              Gudang utama
-            </option>
+            <option value="Gudang utama">Gudang utama</option>
           </select>
         </div>
 
         {/* STATUS LOADING */}
-
         {loading && (
           <div
             style={{
@@ -631,6 +595,7 @@ function AdminDataBahanBakuContent() {
               style={{
                 display: 'inline',
                 marginRight: '6px',
+                verticalAlign: 'middle',
               }}
             />
             Memuat data bahan baku...
@@ -638,7 +603,6 @@ function AdminDataBahanBakuContent() {
         )}
 
         {/* TABEL */}
-
         <div style={{ overflowX: 'auto' }}>
           <table
             style={{
@@ -648,7 +612,6 @@ function AdminDataBahanBakuContent() {
               minWidth: '760px',
             }}
           >
-
             <thead>
               <tr
                 style={{
@@ -657,34 +620,16 @@ function AdminDataBahanBakuContent() {
                   textAlign: 'left',
                 }}
               >
-                <th style={tableHeaderStyle}>
-                  Bahan baku
-                </th>
-
-                <th style={tableHeaderStyle}>
-                  Stok
-                </th>
-
-                <th style={tableHeaderStyle}>
-                  Minimum
-                </th>
-
-                <th style={tableHeaderStyle}>
-                  Harga / satuan
-                </th>
-
-                <th style={tableHeaderStyle}>
-                  Kondisi
-                </th>
-
-                <th style={tableHeaderStyle}>
-                  Aksi
-                </th>
+                <th style={tableHeaderStyle}>Bahan baku</th>
+                <th style={tableHeaderStyle}>Stok</th>
+                <th style={tableHeaderStyle}>Minimum</th>
+                <th style={tableHeaderStyle}>Harga / satuan</th>
+                <th style={tableHeaderStyle}>Kondisi</th>
+                <th style={tableHeaderStyle}>Aksi</th>
               </tr>
             </thead>
 
             <tbody>
-
               {filteredRows.map((item) => (
                 <tr
                   key={item.id}
@@ -692,7 +637,6 @@ function AdminDataBahanBakuContent() {
                     borderBottom: '1px solid #fdf2f8',
                   }}
                 >
-
                   <td style={tableCellStyle}>
                     <div
                       style={{
@@ -714,13 +658,8 @@ function AdminDataBahanBakuContent() {
                     </div>
                   </td>
 
-                  <td style={tableCellStyle}>
-                    {item.stok}
-                  </td>
-
-                  <td style={tableCellStyle}>
-                    {item.minimum}
-                  </td>
+                  <td style={tableCellStyle}>{item.stok}</td>
+                  <td style={tableCellStyle}>{item.minimum}</td>
 
                   <td
                     style={{
@@ -732,11 +671,7 @@ function AdminDataBahanBakuContent() {
                   </td>
 
                   <td style={tableCellStyle}>
-                    <span
-                      style={getKondisiBadgeStyle(
-                        item.kondisi
-                      )}
-                    >
+                    <span style={getKondisiBadgeStyle(item.kondisi)}>
                       {item.kondisi}
                     </span>
                   </td>
@@ -750,7 +685,6 @@ function AdminDataBahanBakuContent() {
                         whiteSpace: 'nowrap',
                       }}
                     >
-
                       <Link
                         href={`/admin/bahan-baku/${encodeURIComponent(item.id)}`}
                         style={actionLinkStyle}
@@ -774,15 +708,12 @@ function AdminDataBahanBakuContent() {
                       >
                         Hapus
                       </Link>
-
                     </div>
                   </td>
-
                 </tr>
               ))}
 
               {/* DATA KOSONG */}
-
               {filteredRows.length === 0 && (
                 <tr>
                   <td
@@ -799,14 +730,12 @@ function AdminDataBahanBakuContent() {
                   </td>
                 </tr>
               )}
-
             </tbody>
           </table>
         </div>
       </div>
 
       {/* TOMBOL TAMBAH */}
-
       <div>
         <Link
           href="/admin/bahan-baku/tambah"
@@ -828,8 +757,7 @@ function AdminDataBahanBakuContent() {
         </Link>
       </div>
 
-      {/* INFORMASI */}
-
+      {/* INFORMASI PERSEDIAAN */}
       <div
         style={{
           backgroundColor: '#ffffff',
@@ -875,16 +803,18 @@ function AdminDataBahanBakuContent() {
               marginTop: '3px',
             }}
           >
-            Stok yang sama dengan atau di bawah stok minimum
-            akan ditandai sebagai stok rendah.
+            Stok yang sama dengan atau di bawah stok minimum akan ditandai
+            sebagai stok rendah.
           </div>
         </div>
       </div>
 
       {/* MODAL NOTIFIKASI */}
-
       {showModal && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="notification-title"
           style={{
             position: 'fixed',
             inset: 0,
@@ -907,7 +837,6 @@ function AdminDataBahanBakuContent() {
               boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
             }}
           >
-
             <div
               style={{
                 width: '56px',
@@ -925,6 +854,7 @@ function AdminDataBahanBakuContent() {
             </div>
 
             <h3
+              id="notification-title"
               style={{
                 fontSize: '20px',
                 color: '#6b21a8',
@@ -946,6 +876,7 @@ function AdminDataBahanBakuContent() {
             </p>
 
             <button
+              type="button"
               onClick={handleCloseModal}
               style={{
                 width: '100%',
@@ -961,36 +892,10 @@ function AdminDataBahanBakuContent() {
             >
               Selesai
             </button>
-
           </div>
         </div>
       )}
-
     </div>
-  );
-}
-
-// ======================================================
-// PEMBUNGKUS SUSPENSE
-// ======================================================
-
-export default function AdminDataBahanBakuPage() {
-  return (
-    <Suspense
-      fallback={
-        <div
-          style={{
-            padding: '24px',
-            color: '#6b21a8',
-            fontSize: '14px',
-          }}
-        >
-          Memuat data bahan baku...
-        </div>
-      }
-    >
-      <AdminDataBahanBakuContent />
-    </Suspense>
   );
 }
 
@@ -1053,7 +958,7 @@ const actionLinkStyle: React.CSSProperties = {
 };
 
 function getKondisiBadgeStyle(
-  kondisi: string
+  kondisi: BahanBakuItem['kondisi']
 ): React.CSSProperties {
   if (kondisi === 'Aman') {
     return {
