@@ -1,5 +1,26 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## API alur pemesanan bahan baku
+
+API berikut mengimplementasikan alur tiga aktor dari permission matrix:
+
+1. **Admin** membuat pesanan (`POST /api/pemesanan-bahan-baku`) atau mengubah detail sebelum persetujuan (`PUT`).
+2. **Owner** meninjau (`GET /api/persetujuan`) lalu menyetujui atau menolak (`PATCH`).
+3. **Supplier** melihat pesanan (`GET /api/pemesanan-bahan-baku`) dan menerima pesanan yang telah disetujui (`PATCH`).
+
+Contoh body untuk membuat pesanan:
+
+```json
+{
+  "supplier": "PT Prima Dairy",
+  "bahanBaku": "Mentega",
+  "jumlah": "20 kg",
+  "totalHarga": 2400000
+}
+```
+
+Setiap request harus mengirim header `x-user-role` (`Admin`, `Owner`, atau `Supplier`) sesuai aktornya. Header ini hanya simulasi otorisasi untuk aplikasi praktikum; ganti dengan autentikasi sesi/token server sebelum digunakan di lingkungan produksi. Data API saat ini disimpan di memori proses dan akan kembali ke data awal ketika server dimulai ulang.
+
 ## Getting Started
 
 First, run the development server:
